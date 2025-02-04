@@ -1,0 +1,15 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  /* Asegura que el html y el body ocupen toda la ventana */
+  overflow: hidden;
+  /* Evita barras de desplazamiento no deseadas */
+}
+
+#root {
+  height: 100%;
+  /* Asegura que el contenedor raíz de React cubra toda la altura */
+}
