@@ -70,7 +70,7 @@ export default function MyRouter() {
                     path: '/empleo',
                     element: (
                         <RoleGuard allowedRoles={['admin']}>
-                            <EmployeeList />
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -84,7 +84,7 @@ export default function MyRouter() {
                     path: '/multas',
                     element: (
                         <RoleGuard allowedRoles={['user', 'admin']}>
-                            <h1>Lista de Multas</h1>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -98,7 +98,7 @@ export default function MyRouter() {
                     path: '/recoleccion',
                     element: (
                         <RoleGuard allowedRoles={['user', 'admin']}>
-                            <h1>Lista de Recolección</h1>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -112,7 +112,7 @@ export default function MyRouter() {
                     path: '/almacenamiento',
                     element: (
                         <RoleGuard allowedRoles={['user', 'admin']}>
-                            <h1>Lista de Almacenamiento</h1>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -126,7 +126,7 @@ export default function MyRouter() {
                     path: '/geoEstadistica',
                     element: (
                         <RoleGuard allowedRoles={['user', 'admin']}>
-                            <h1>Lista de GeoEstadística</h1>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -140,7 +140,7 @@ export default function MyRouter() {
                     path: '/profile',
                     element: (
                         <RoleGuard allowedRoles={['user', 'admin']}>
-                            <Profile />
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -152,7 +152,7 @@ export default function MyRouter() {
                     path: '/users',
                     element: (
                         <RoleGuard allowedRoles={['admin']}>
-                            <UserList />
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
