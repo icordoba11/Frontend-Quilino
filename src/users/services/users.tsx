@@ -25,7 +25,6 @@ const userService = {
     async getRoleById(uid: string): Promise<string> {
         try {
             const { data } = await instance.get(`/user/role/${uid}`);
-            console.log("service",data);
             return data; 
         } catch (error) {
             return Promise.reject(error);
