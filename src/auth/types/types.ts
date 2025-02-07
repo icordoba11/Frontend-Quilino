@@ -1,11 +1,8 @@
 export interface UserData {
-
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    password: string;
-    role?: string;
+    NombreUsuario:string;
+    Email:string;
+    Rol:string;
+    Contrasena:string;
 
 }
 
@@ -21,6 +18,15 @@ export interface RoleData {
 }
 
 export interface LoginData {
-    email: string;
-    password: string;
+    NombreUsuario: string;
+    Contrasena: string;
+}
+
+export interface UserResponse {
+
+    isSuccess: boolean;
+    id: number;
+    rol: string;
+    token: string;
+
 }

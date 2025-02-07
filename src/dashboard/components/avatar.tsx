@@ -7,30 +7,30 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../configs/firebase/firebase-config';
 import Divider from '@mui/material/Divider';
 import PeopleIcon from '@mui/icons-material/People';
 import { red } from '@mui/material/colors';
 import { paths } from '../../configs/constants/paths';
+import { useAuth } from '../../auth/components/auth-context';
 
 export default function AvatarProfile() {
+    const { logout } = useAuth();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const navigate = useNavigate();
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-
-    const logOut = async () => {
+    const handleLogout = async () => {
         try {
-            await signOut(auth);
-            console.log('Usuario deslogueado con éxito');
-            navigate('/auth/sign-in');
+            await logout();
+            navigate(paths.auth.signIn);
         } catch (error) {
             console.error('Error al desloguear al usuario:', error);
         }
@@ -101,7 +101,7 @@ export default function AvatarProfile() {
                 </MenuItem>
                 <Divider />
 
-                <MenuItem onClick={logOut}>
+                <MenuItem onClick={handleLogout}>  {/* Cambié esto */}
                     <Avatar sx={{ bgcolor: red[500] }}>
                         <Logout fontSize="small" />
                     </Avatar>
@@ -111,5 +111,3 @@ export default function AvatarProfile() {
         </React.Fragment>
     );
 }
-
-

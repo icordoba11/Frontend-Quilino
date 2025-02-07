@@ -22,7 +22,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavData } from '../../configs/constants/config-navigation';
-import Logo from '../../assets/logo/monteCristo.webp'
+import Logo from '../../assets/images/logo-municipalidad.webp'
 import AvatarProfile from './avatar';
 
 const drawerWidth = 240;
@@ -140,7 +140,7 @@ export default function MiniDrawer() {
             <Drawer variant="permanent" open={open}   >
                 <DrawerHeader >
                     <Link to="/dashboard" style={{ margin: 'auto' }} >
-                        <img src={Logo} alt="Logo" style={{ width: '80px', height: '80px' }} />
+                        <img src={Logo} alt="Logo" style={{ width: '140px', height: '80px' }} />
                     </Link>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}

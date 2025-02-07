@@ -36,7 +36,7 @@ export default function UserEditPage() {
     });
 
     if (!id) {
-        return <div>Loading...</div>;  
+        return <div>Loading...</div>;  // O alguna lógica para manejar el caso de `id` faltante
     }
 
 

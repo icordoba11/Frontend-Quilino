@@ -6,18 +6,18 @@ import FormProvider from '../../../shared/components/form/form-provider';
 import { useAuth } from '../auth-context';
 import LoadingButton from '../../../shared/components/chargers/loading-button';
 import { useSnackbar } from 'notistack';
+import { useMutation } from '@tanstack/react-query';
+import { LoginData } from '../../types/types';
+import usersService from '../../services/users';
 
-interface User {
-  email: string;
-  password: string;
-}
+
 
 const SignInForm: React.FC = () => {
 
-  const methods = useForm<User>({
+  const methods = useForm<LoginData>({
     defaultValues: {
-      email: '',
-      password: '',
+      NombreUsuario: '',
+      Contrasena: '',
     },
   });
 
@@ -26,16 +26,29 @@ const SignInForm: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { handleSubmit, } = methods;
 
+  const mutation = useMutation({
+    mutationFn: async (data: LoginData) => {
+      return usersService.login({
+        NombreUsuario: data.NombreUsuario.trim(),
+        Contrasena: data.Contrasena,
+      });
+    },
+    onSuccess: (data) => {
+      console.log('success');
+    },
+    onError: (error) => {
+      console.error('Error al hacer login:', error);
+    },
+  });
 
-  const onSubmit = handleSubmit(async (values) => {
+
+  const onSubmit = handleSubmit(async (values: LoginData) => {
     setLoading(true);
     try {
-      await login({
-        email: values.email,
-        password: values.password,
-      });
+      const responde = await mutation.mutateAsync(values);
+      login(responde)
     } catch (error) {
-      enqueueSnackbar("Credenciales incorrectas", { variant: 'error' })
+      enqueueSnackbar("Credenciales incorrectas", { variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -46,22 +59,19 @@ const SignInForm: React.FC = () => {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Box sx={{ padding: '20px' }}>
         <RHFTextField
-          name="email"
-          type="email"
-          label="Email"
+          name="NombreUsuario"
+          type="text"
+          label="Nombre de usuario"
           rules={{
-            required: 'El email es obligatorio',
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: 'Introduce un email válido',
-            },
+            required: 'El Nombre de usuario es obligatorio',
+
           }}
           helperText="Introduce tu email"
 
         />
 
         <RHFTextField
-          name="password"
+          name="Contrasena"
           type="password"
           label="Contraseña"
           rules={{

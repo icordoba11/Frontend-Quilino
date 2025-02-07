@@ -69,8 +69,8 @@ export default function MyRouter() {
                 {
                     path: '/empleo',
                     element: (
-                        <RoleGuard allowedRoles={['admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                            <EmployeeList />
                         </RoleGuard>
                     ),
                     children: [
@@ -83,8 +83,8 @@ export default function MyRouter() {
                 {
                     path: '/multas',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                            <h1>Lista de Multas</h1>
                         </RoleGuard>
                     ),
                     children: [
@@ -97,8 +97,8 @@ export default function MyRouter() {
                 {
                     path: '/recoleccion',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                            <h1>Lista de Recolección</h1>
                         </RoleGuard>
                     ),
                     children: [
@@ -111,8 +111,8 @@ export default function MyRouter() {
                 {
                     path: '/almacenamiento',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                            <h1>Lista de Almacenamiento</h1>
                         </RoleGuard>
                     ),
                     children: [
@@ -125,8 +125,8 @@ export default function MyRouter() {
                 {
                     path: '/geoEstadistica',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                            <h1>Lista de GeoEstadística</h1>
                         </RoleGuard>
                     ),
                     children: [
@@ -139,8 +139,8 @@ export default function MyRouter() {
                 {
                     path: '/profile',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                            <Profile />
                         </RoleGuard>
                     ),
                     children: [
@@ -151,8 +151,8 @@ export default function MyRouter() {
                 {
                     path: '/users',
                     element: (
-                        <RoleGuard allowedRoles={['admin']}>
-                            <Outlet />
+                        <RoleGuard allowedRoles={['Administrador']}>
+                            <UserList />
                         </RoleGuard>
                     ),
                     children: [

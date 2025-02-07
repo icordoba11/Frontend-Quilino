@@ -1,10 +1,12 @@
 import TableEmployees from "../components/table-employees";
-
+import { EmployeesProvider } from "../components/provider/employee-context";
 
 const EmployeesList = () => {
 
     return (
-        <TableEmployees />
+        <EmployeesProvider>
+            <TableEmployees />
+        </EmployeesProvider>
     );
 };
 

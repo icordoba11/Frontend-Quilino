@@ -1,17 +1,24 @@
 import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, User } from 'firebase/auth';
-import app from '../../configs/firebase/firebase-config';
-import { auth } from '../../configs/firebase/firebase-config';
-import { useSnackbar } from 'notistack';
-
+import CryptoJS from 'crypto-js';
+import { UserResponse } from '../types/types';
 
 type AuthContextType = {
-    currentUser: User | null;
+    currentUser: string | null;  // Ahora es solo un string, representando el nombre o ID del usuario.
     isLoading: boolean;
-    login: (user: UserLogin) => void;
+    isAuthenticated: boolean;
+    userRole: string | null;
+    token: string | null;
+    userName: string;
+    encryptedNumber: string | null;
+    tokenReset: string | null;
+    login: (user: UserResponse) => void;
     logout: () => void;
+    decryptData: (data: string) => string;
+    encryptData: (data: string) => string;
+    saveEncryptedNumber: (id: string) => void;
+    saveTokenReset: (token: string) => void;
+    clearResetId: () => void;
 };
-
 
 export interface UserLogin {
     email: string;
@@ -21,39 +28,119 @@ export interface UserLogin {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const { enqueueSnackbar } = useSnackbar();
+    const [currentUser, setCurrentUser] = useState<string | null>(null); 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        const auth = getAuth(app);
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user);
-            setIsLoading(false);
-        });
-
-        return () => unsubscribe();
-    }, []);
-
-    const login = async (user: UserLogin) => {
+    const decryptData = (data: string): string => {
         try {
-            await signInWithEmailAndPassword(auth, user.email, user.password);
-
+            const bytes = CryptoJS.AES.decrypt(data, 'secret-key');
+            return bytes.toString(CryptoJS.enc.Utf8);
         } catch (error) {
-            enqueueSnackbar("Credenciales incorrectas", { variant: 'error' })
-
+            console.error('Error decrypting data:', error);
+            return '';
         }
     };
 
+    const encryptData = (data: string): string => {
+        return CryptoJS.AES.encrypt(data, 'secret-key').toString();
+    };
+
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+        const storedAuth = sessionStorage.getItem('isAuthenticated');
+        return storedAuth === 'true';
+    });
+
+    const [userRole, setUserRole] = useState<string | null>(() => {
+        const storedRole = sessionStorage.getItem('userRole');
+        return storedRole ? decryptData(storedRole) : null;
+    });
+
+    const [token, setToken] = useState<string | null>(() => {
+        const storedToken = sessionStorage.getItem('token');
+        return storedToken ? decryptData(storedToken) : null;
+    });
+
+    const [userName, setUserName] = useState<string>(() => {
+        const storedUserName = sessionStorage.getItem('userName');
+        return storedUserName ? decryptData(storedUserName) : '';
+    });
+
+    const [encryptedNumber, setEncryptedNumber] = useState<string | null>(() => {
+        const storedNumber = localStorage.getItem('encryptedNumber');
+        return storedNumber ? decryptData(storedNumber) : null;
+    });
+
+    const [tokenReset, setTokenReset] = useState<string | null>(() => {
+        const storedToken = localStorage.getItem('resetToken');
+        return storedToken ? decryptData(storedToken) : null;
+    });
+
+    useEffect(() => {
+        setIsLoading(false);  
+    }, []);
+
+    const login = async (user: UserResponse) => {
+        setIsAuthenticated(true);
+        setUserRole(user.rol);
+        setToken(user.token);
+        // setUserName(user.name); 
+
+        sessionStorage.setItem('isAuthenticated', 'true');
+        sessionStorage.setItem('userRole', encryptData(user.rol));
+        sessionStorage.setItem('token', user.token);
+        // sessionStorage.setItem('userName', encryptData(user.name));
+    };
+
     const logout = () => {
-        const auth = getAuth(app);
-        auth.signOut().then(() => {
-            setCurrentUser(null);
-        });
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+        setUserRole(null);
+        setToken(null);
+        setUserName('');
+
+        sessionStorage.removeItem('isAuthenticated');
+        sessionStorage.removeItem('userRole');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userName');
+        localStorage.removeItem('encryptedNumber');
+        localStorage.removeItem('resetToken');
+    };
+
+    const saveEncryptedNumber = (id: string) => {
+        const encrypted = encryptData(id);
+        setEncryptedNumber(encrypted);
+        localStorage.setItem('encryptedNumber', encrypted);
+    };
+
+    const saveTokenReset = (token: string) => {
+        const encrypted = encryptData(token);
+        setTokenReset(encrypted);
+        localStorage.setItem('resetToken', encrypted);
+    };
+
+    const clearResetId = () => {
+        localStorage.removeItem('encryptedNumber');
+        localStorage.removeItem('resetToken');
     };
 
     return (
-        <AuthContext.Provider value={{ currentUser, isLoading, login, logout }}>
+        <AuthContext.Provider value={{
+            currentUser,
+            isLoading,
+            isAuthenticated,
+            userRole,
+            token,
+            userName,
+            encryptedNumber,
+            tokenReset,
+            login,
+            logout,
+            decryptData,
+            encryptData,
+            saveEncryptedNumber,
+            saveTokenReset,
+            clearResetId,
+        }}>
             {children}
         </AuthContext.Provider>
     );

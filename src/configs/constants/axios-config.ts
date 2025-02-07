@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { getAuth } from 'firebase/auth';
-
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -11,21 +9,18 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  async (config) => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
 
-    if (currentUser) {
-      try {
-        const token = await currentUser.getIdToken();
-        config.headers.Authorization = `Bearer ${token}`;
-      } catch (error) {
-        console.error('Error al obtener el token de Firebase:', error);
-      }
+  async (config) => {
+    const token = sessionStorage.getItem('token');
+
+    if (token) {
+
+      config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default instance;

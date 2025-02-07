@@ -21,6 +21,7 @@
     "@types/react-query": "^1.2.8",
     "axios": "^1.7.9",
     "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
     "firebase": "^11.2.0",
     "lodash.merge": "^4.6.2",
     "notistack": "^3.0.1",

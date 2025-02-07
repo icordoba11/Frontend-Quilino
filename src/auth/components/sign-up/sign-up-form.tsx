@@ -4,41 +4,40 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import RHFTextField from '../../../shared/components/form/rhf-text-field';
 import FormProvider from '../../../shared/components/form/form-provider';
-import { useCustomMutation } from '../../../hooks/use-mutation';
-import usersService from '../../services/users';
 
-interface SignUpFormInputs {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  role: string;
-}
+import usersService from '../../services/users';
+import { UserData } from '../../types/types';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from '../../../hooks/use-router';
+import { useSnackbar } from 'notistack';
 
 const SignUpForm: React.FC = () => {
-  const methods = useForm<SignUpFormInputs>({
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  const methods = useForm<UserData>({
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      role: 'user'
+      NombreUsuario: "",
+      Email: "",
+      Rol: "user",
+      Contrasena: "",
     },
   });
 
-  const mutation = useCustomMutation({
-    mutationFn: async (user: SignUpFormInputs) => {
-      const userData = { ...user, role: 'user' };
-      const response = await usersService.createUser(userData);
+  const mutation = useMutation({
+    mutationFn: async (user: UserData) => {
+      const userData = { ...user, Rol: "Administrador" };
+      const response = await usersService.createFirstUser(userData);
       return response;
     },
     onSuccess: () => {
+      enqueueSnackbar('Registro Exitoso', { variant: 'success' })
       methods.reset();
-
+      router.replace('/');
+      
     },
-    onSuccessMessage: 'Usuario creado correctamente',
-    onErrorMessage: 'Error al crear el usuario',
+    onError: (error) => {
+      console.error('Error al crear el usuario:', error);
+    },
   });
 
   const { handleSubmit } = methods;
@@ -53,9 +52,9 @@ const SignUpForm: React.FC = () => {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Box sx={{ padding: '0 20px' }}>
         <RHFTextField
-          name="firstName"
+          name="NombreUsuario"
           type="text"
-          label="Nombre"
+          label="Nombre de usuario"
           rules={{
             required: 'El nombre es obligatorio',
             minLength: {
@@ -63,27 +62,13 @@ const SignUpForm: React.FC = () => {
               message: 'El nombre debe tener al menos 2 caracteres',
             },
           }}
-          helperText="Introduce tu nombre"
-
+          helperText="Introduce tu usuario"
+          sx={{ mb: 1 }}
         />
 
-        <RHFTextField
-          name="lastName"
-          type="text"
-          label="Apellido"
-          rules={{
-            required: 'El apellido es obligatorio',
-            minLength: {
-              value: 2,
-              message: 'El apellido debe tener al menos 2 caracteres',
-            },
-          }}
-          helperText="Introduce tu apellido"
-
-        />
 
         <RHFTextField
-          name="email"
+          name="Email"
           type="email"
           label="Email"
           rules={{
@@ -94,11 +79,11 @@ const SignUpForm: React.FC = () => {
             },
           }}
           helperText="Introduce tu email"
-
+          sx={{ mb: 1 }}
         />
 
         <RHFTextField
-          name="password"
+          name="Contrasena"
           type="password"
           label="Contraseña"
           rules={{
@@ -113,7 +98,7 @@ const SignUpForm: React.FC = () => {
             },
           }}
           helperText="Introduce tu contraseña"
-
+          sx={{ mb: 1 }}
         />
 
         <Button
