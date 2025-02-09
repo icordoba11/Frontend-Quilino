@@ -33,6 +33,7 @@ const Auth = () => {
             label: 'Registro',
             children: <SignUpForm />,
             disabled: isSignUpDisabled,
+            
         },
     ];
 
