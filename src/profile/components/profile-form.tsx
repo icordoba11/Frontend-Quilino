@@ -4,7 +4,7 @@ import RHFTextField from "../../shared/components/form/rhf-text-field";
 import FormProvider from "../../shared/components/form/form-provider";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import userService from "../../users/services/users";
-import { useAuth } from "../../auth/components/auth-context";
+import { useAuth } from '../../auth/components/auth-context';
 import { User } from "../../users/types/types";
 import { useEffect, useState } from "react";
 import LoadingButton from "../../shared/components/chargers/loading-button";
@@ -22,69 +22,70 @@ const ProfileForm = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
+
     const { data, isLoading } = useQuery({
-        queryKey: ['user', currentUser?.uid],
-        queryFn: () => currentUser ? userService.findById(currentUser.uid) : Promise.resolve(null),
+        queryKey: ['user', currentUser],
+        queryFn: () => currentUser ? userService.findById(currentUser) : Promise.resolve(null),
         enabled: !!currentUser,
     });
 
     const methods = useForm<User>({
         defaultValues: {
-            firstName: data?.firstName || "",
-            lastName: data?.lastName || "",
+            nombreUsuario: data?.nombreUsuario || "",
             email: data?.email || "",
-            role: data?.role || "",
+            rol: data?.rol || "",
+            fechaRegistro: data?.fechaRegistro || "",
         }
     });
 
     useEffect(() => {
         if (data) {
             methods.reset({
-                firstName: data.firstName || "",
-                lastName: data.lastName || "",
+                nombreUsuario: data.nombreUsuario || "",
                 email: data.email || "",
-                role: data.role || "",
+                rol: data.rol || "",
+                fechaRegistro: data.fechaRegistro || "",
             });
         }
     }, [data, methods]);
 
 
-    const updateMutation = useMutation({
-        mutationFn: ({ id, user }: { id: string; user: User }) => userService.update(id, user),
-        onSuccess: () => {
-            enqueueSnackbar('Email cambiado con exito, por favor ingrese nuevamente !');
-            logout();
-            navigate('/auth/sign-in');
-        },
-    });
+    // const updateMutation = useMutation({
+    //     mutationFn: ({ id, user }: { id: string; user: User }) => userService.update(id, user),
+    //     onSuccess: () => {
+    //         enqueueSnackbar('Email cambiado con exito, por favor ingrese nuevamente !');
+    //         logout();
+    //         navigate('/auth/sign-in');
+    //     },
+    // });
 
     const { handleSubmit } = methods;
 
-    const onSubmit = async (data: User) => {
-        if (currentUser) {
-            updateMutation.mutate({
-                id: currentUser.uid,
-                user: data,
-            });
-        }
-    };
+    // const onSubmit = async (data: User) => {
+    //     if (currentUser) {
+    //         updateMutation.mutate({
+    //             id: currentUser.uid,
+    //             user: data,
+    //         });
+    //     }
+    // };
 
 
 
-    const ConfirmButton = () => {
+    // const ConfirmButton = () => {
 
-        const handleConfirm = async () => {
-            await handleSubmit(onSubmit)();
-        };
-        return (
-            <LoadingButton
-                onClick={handleConfirm}
-                isLoading={updateMutation.isPending}
-            >
-                Guardar
-            </LoadingButton>
-        );
-    };
+    //     const handleConfirm = async () => {
+    //         await handleSubmit(onSubmit)();
+    //     };
+    //     return (
+    //         <LoadingButton
+    //             onClick={handleConfirm}
+    //             isLoading={updateMutation.isPending}
+    //         >
+    //             Guardar
+    //         </LoadingButton>
+    //     );
+    // };
 
     return (
         <Paper
@@ -115,20 +116,21 @@ const ProfileForm = () => {
                 </Box>
             </Box>
 
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <FormProvider methods={methods} onSubmit={handleSubmit(() => { })}>
                 <Grid container spacing={2} sx={{ flexWrap: 'wrap' }}>
                     <Grid item xs={12} sm={6}>
-                        <RHFTextField label="Nombre" name="firstName" />
+                        <RHFTextField label="Nombre" name="nombreUsuario" disabled />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <RHFTextField label="Apellido" name="lastName" />
+                        <RHFTextField label="Fecha de creacion" name="fechaRegistro" disabled />
                     </Grid>
                     <Grid item xs={12}>
-                        <RHFTextField label="Email" name="email" />
+                        <RHFTextField label="Email" name="email" disabled />
                     </Grid>
                     <Grid item xs={12}>
-                        <RHFTextField label="Rol" name="role" sx={{ maxWidth: 200 }} disabled />
+                        <RHFTextField label="Rol" name="rol" sx={{ maxWidth: 200 }} disabled />
                     </Grid>
+
                     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', height: '100%' }}>
                         <Grid item xs={6} sm={2} sx={{ mt: 5 }} >
                             <Button
@@ -169,7 +171,7 @@ const ProfileForm = () => {
                         </Typography>
                     </Box>
                 }
-                action={<ConfirmButton />}
+            // action={<ConfirmButton />}
             />
         </Paper>
     );

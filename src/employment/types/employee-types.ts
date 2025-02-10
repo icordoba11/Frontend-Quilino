@@ -56,3 +56,20 @@ interface ReciboDeSueldo {
   fechaPago: string;
   items: any[];
 }
+
+export type SendEmployeesDate = {
+  fechaEnviaSueldos: string;
+  fechaLiquidacionSueldos: string;
+  employeeLits?: EmployeeId[];
+}
+export type SendEmployeesDateConvert = {
+  fechaEjecucion: string;
+  PeriodoLiquidacion: string;
+  EmpleadosEnviar?: EmployeeId[];
+}
+
+type EmployeeId = {
+  id: number;
+}
+
+

@@ -1,19 +1,21 @@
 import React, { useCallback } from "react";
 import PaginatedTable from "../../shared/components/table/table-paginated";
 import CustomBreadcrumbs from "../../shared/components/breadcrumbs/bread-crums";
-import { Container, TableBody } from "@mui/material";
+import { Box, Button, Container, TableBody } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../services/users";
 import { User } from "../types/types";
 import { paths } from "../../configs/constants/paths";
 import { useRouter } from "../../hooks/use-router";
 import UserTableRow from "../components/user-table-row";
+import AddIcon from '@mui/icons-material/Add';
+
 
 const columns = [
-    { field: "firstName", headerName: "First Name" },
-    { field: "lastName", headerName: "Last Name" },
+    { field: "nombreUsuario", headerName: "Nombre de usuario" },
     { field: "email", headerName: "Email" },
-    { field: "role", headerName: "Role" },
+    { field: "rol", headerName: "Rol" },
+    { field: "fechaRegistro", headerName: "Fecha de registro" },
     { field: "actions", headerName: "" },
 ];
 
@@ -34,14 +36,24 @@ const UsersList: React.FC = () => {
     );
 
     return (
-        <Container>
+        <Container maxWidth={'md'} >
             <CustomBreadcrumbs
                 heading='User List'
                 links={[{ name: 'User list' }]}
-                sx={{ mb: { xs: 3, md: 5 } }}
+               
             />
-            <PaginatedTable columns={columns} data={data ?? []}>
-                <TableBody>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end'}} >
+                <Button
+                    variant="text"
+                    sx={{ m: 2, borderRadius: 4 }}
+                    startIcon={<AddIcon />}
+                    onClick={() => router.replace(paths.main.users.new)}
+                >
+                    Create new user
+                </Button>
+            </Box>
+            <PaginatedTable columns={columns} data={data ?? []}  >
+                <TableBody >
                     {data?.map((user: User) => (
                         <UserTableRow
                             key={user.id}

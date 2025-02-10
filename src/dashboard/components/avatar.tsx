@@ -90,22 +90,15 @@ export default function AvatarProfile() {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
                 <MenuItem onClick={() => navigate(paths.main.profile.edit)}>
-                    <Avatar /> Profile
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={() => navigate(paths.main.users.list)} >
-                    <Avatar >
-                        < PeopleIcon />
-                    </Avatar>
-                    Users List
+                    <Avatar /> Perfil
                 </MenuItem>
                 <Divider />
 
-                <MenuItem onClick={handleLogout}>  {/* Cambié esto */}
+                <MenuItem onClick={handleLogout}>  
                     <Avatar sx={{ bgcolor: red[500] }}>
                         <Logout fontSize="small" />
                     </Avatar>
-                    Logout
+                    Cerrar sesion
                 </MenuItem>
             </Menu>
         </React.Fragment>

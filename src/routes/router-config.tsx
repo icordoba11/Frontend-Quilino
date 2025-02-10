@@ -8,13 +8,21 @@ import AuthLayout from '../shared/components/layouts/auth-basic-layout';
 import DashboardLayout from '../dashboard/layouts/dashboard-layout';
 import RoleGuard from './guards/role-guard';
 
-
+//Authentication
 const Auth = lazy(() => import('../auth/pages/auth'));
+
+//Employees
 const EmployeeList = lazy(() => import('../employment/pages/list'));
+//Dashboard
 const Dashboard = lazy(() => import('../dashboard/pages/dashboard'));
+//Profile
 const Profile = lazy(() => import('../profile/pages/profile'))
+//Users
 const UserList = lazy(() => import('../users/pages/list'));
 const UserEdit = lazy(() => import('../users/pages/edit'));
+const UserCreate = lazy(() => import('../users/pages/new'))
+//Upload Files
+const FileUpload = lazy(() => import('../upload/page/upload-files'));
 
 export default function MyRouter() {
     return useRoutes([
@@ -70,7 +78,7 @@ export default function MyRouter() {
                     path: '/empleo',
                     element: (
                         <RoleGuard allowedRoles={['user', 'Administrador']}>
-                            <EmployeeList />
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -81,66 +89,35 @@ export default function MyRouter() {
                     ],
                 },
                 {
-                    path: '/multas',
+                    path: '/historics',
                     element: (
                         <RoleGuard allowedRoles={['user', 'Administrador']}>
-                            <h1>Lista de Multas</h1>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
-                        { element: <h1>Lista de Multas</h1>, index: true },
-                        { path: 'new', element: <h1>Crear Multa</h1> },
-                        { path: 'edit', element: <h1>Editar Multa</h1> },
-                        { path: 'list', element: <h1>Lista de Multas</h1> },
+                        { path: ':id/list', element: <h1>historics</h1> },
                     ],
                 },
                 {
-                    path: '/recoleccion',
+                    path: '/upload-files',
                     element: (
                         <RoleGuard allowedRoles={['user', 'Administrador']}>
-                            <h1>Lista de Recolección</h1>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
-                        { element: <h1>Lista de Recolección</h1>, index: true },
-                        { path: 'new', element: <h1>Crear Recolección</h1> },
-                        { path: 'edit', element: <h1>Editar Recolección</h1> },
-                        { path: 'list', element: <h1>Lista de Recolección</h1> },
+                        { element: <FileUpload />, index: true },
+                        { path: 'list', element: <FileUpload /> },
+
                     ],
                 },
-                {
-                    path: '/almacenamiento',
-                    element: (
-                        <RoleGuard allowedRoles={['user', 'Administrador']}>
-                            <h1>Lista de Almacenamiento</h1>
-                        </RoleGuard>
-                    ),
-                    children: [
-                        { element: <h1>Lista de Almacenamiento</h1>, index: true },
-                        { path: 'new', element: <h1>Crear Almacenamiento</h1> },
-                        { path: 'edit', element: <h1>Editar Almacenamiento</h1> },
-                        { path: 'list', element: <h1>Lista de Almacenamiento</h1> },
-                    ],
-                },
-                {
-                    path: '/geoEstadistica',
-                    element: (
-                        <RoleGuard allowedRoles={['user', 'Administrador']}>
-                            <h1>Lista de GeoEstadística</h1>
-                        </RoleGuard>
-                    ),
-                    children: [
-                        { element: <h1>Lista de GeoEstadística</h1>, index: true },
-                        { path: 'new', element: <h1>Crear GeoEstadística</h1> },
-                        { path: 'edit', element: <h1>Editar GeoEstadística</h1> },
-                        { path: 'list', element: <h1>Lista de GeoEstadística</h1> },
-                    ],
-                },
+
                 {
                     path: '/profile',
                     element: (
                         <RoleGuard allowedRoles={['user', 'Administrador']}>
-                            <Profile />
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
@@ -151,14 +128,15 @@ export default function MyRouter() {
                 {
                     path: '/users',
                     element: (
-                        <RoleGuard allowedRoles={['Administrador']}>
-                            <UserList />
+                        <RoleGuard allowedRoles={['Administrador', 'user']}>
+                            <Outlet />
                         </RoleGuard>
                     ),
                     children: [
                         { element: <UserList />, index: true },
-                        { path: ':id/edit', element: <UserEdit /> },
+                        { path: 'new', element: <UserCreate /> },
                         { path: 'list', element: <UserList /> },
+                        { path: ':id/edit', element: <UserEdit /> },
                     ],
                 },
                 { path: 'coming-soon', element: <h1>Coming Soon</h1> },

@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import instance from '../../configs/constants/axios-config';
-import { Empleado } from '../types/employee-types';
+import { Empleado, SendEmployeesDateConvert } from '../types/employee-types';
 
 
 const employeeService = {
@@ -32,6 +32,13 @@ const employeeService = {
 
     getEmpleadosByFechaLiquidacion: async (params: { fechaLiquidacion: string; area: string }) => {
         const { data }: AxiosResponse<Empleado[]> = await instance.get('/BuscadorEmpleados/buscarFechaLiquidacion', { params });
+        return data;
+    },
+
+    programarEnvioRecibosSueldo: async (params: SendEmployeesDateConvert) => {
+        const { data }: any = await instance.post('/EnvioEmpleados/enviarRecibosSueldo', params, {
+            headers: { 'Content-Type': 'application/json' }
+        });
         return data;
     },
 

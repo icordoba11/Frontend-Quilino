@@ -4,7 +4,8 @@ export const columnsFirstTable = [
     { key: 'legajo', label: 'Legajo', field: 'legajo' },
     { key: 'area', label: 'Área Administrativa', field: 'areaAdministrativa.nombre' },
     { key: 'fechaLiquidacion', label: 'Fecha de Liquidación', field: 'sueldos[0].fechaLiquidacion' },
-    { key: 'acciones', label: '', field: 'acciones' },
+    { key: 'acciones', label: 'Editar', field: 'edit' },
+    { key: 'acciones', label: 'Historico', field: 'historic' },
 ];
 
 

@@ -7,6 +7,12 @@ interface EmployeesContextType {
     setEmployees: React.Dispatch<React.SetStateAction<Empleado[]>>;
     isLoading?: boolean;
     setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+    selected: Set<number>;
+    setSelected: React.Dispatch<React.SetStateAction<Set<number>>>;
+    IsError?: boolean;
+    setIsError?: React.Dispatch<React.SetStateAction<boolean>>;
+    openDialog: boolean;
+    setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
@@ -16,6 +22,9 @@ const EmployeesContext = createContext<EmployeesContextType | undefined>(undefin
 export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [employees, setEmployees] = useState<Empleado[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [selected, setSelected] = useState<Set<number>>(new Set());
+    const [IsError, setIsError] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
 
 
     return (
@@ -23,7 +32,14 @@ export const EmployeesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             employees,
             setEmployees,
             isLoading,
-            setIsLoading
+            setIsLoading,
+            selected,
+            setSelected,
+            IsError,
+            setIsError,
+            openDialog,
+            setOpenDialog
+
         }}>
             {children}
         </EmployeesContext.Provider>

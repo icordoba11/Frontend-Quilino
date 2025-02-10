@@ -29,6 +29,18 @@ const usersService = {
     },
 
 
+    passwordRecoverEmail: async (email: string) => {
+        try {
+            const response: AxiosResponse = await instance.post('/Accesos/emailRecuperacion', {
+                Email: email,
+                Url: 'http://localhost:5173/auth/sign-in/reset-password?token='
+            });
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+    }
 
 };
 

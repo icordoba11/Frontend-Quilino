@@ -16,7 +16,7 @@ type UserTableRowProps = {
 };
 
 export default function UserTableRow({ row, onEdit }: UserTableRowProps) {
-    const { firstName, lastName, email, role } = row;
+    const { nombreUsuario, email, rol, fechaRegistro } = row;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -29,16 +29,19 @@ export default function UserTableRow({ row, onEdit }: UserTableRowProps) {
 
     const open = Boolean(anchorEl);
 
+    
+
     return (
         <>
             <TableRow hover>
- 
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{firstName}</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{lastName}</TableCell>
+
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{nombreUsuario}</TableCell>
+
 
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{email}</TableCell>
 
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{rol}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fechaRegistro}</TableCell>
 
                 <TableCell align='right' sx={{ px: 1, whiteSpace: 'nowrap' }}>
                     <IconButton color={open ? 'inherit' : 'default'} onClick={handlePopoverOpen}>
@@ -59,7 +62,7 @@ export default function UserTableRow({ row, onEdit }: UserTableRowProps) {
                 </MenuItem>
                 <MenuItem
                     onClick={() => {
-                       
+
                         handlePopoverClose();
                     }}
                     sx={{ color: 'error.main' }}

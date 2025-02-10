@@ -33,10 +33,10 @@ const PaginatedTable: React.FC<PaginatedTableProps> = ({
     };
 
     return (
-        <Paper >
-            <TableContainer>
+        <Paper sx={{ p: 5, borderRadius: 5, boxShadow: 20 }}  >
+            <TableContainer sx={{ mb: 3 }}>
                 <Table>
-                    <TableHead>
+                    <TableHead >
                         <MuiTableRow>
                             {columns.map((column) => (
                                 <TableCell key={column.field}>{column.headerName}</TableCell>

@@ -9,6 +9,8 @@ import { useSnackbar } from 'notistack';
 import { useMutation } from '@tanstack/react-query';
 import { LoginData } from '../../types/types';
 import usersService from '../../services/users';
+import Link from '@mui/material/Link';
+import ResetPassword from './reset-password';
 
 
 
@@ -25,6 +27,7 @@ const SignInForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { handleSubmit, } = methods;
+  const [openDialog, setOpenDialog] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async (data: LoginData) => {
@@ -34,7 +37,7 @@ const SignInForm: React.FC = () => {
       });
     },
     onSuccess: (data) => {
-      console.log('success');
+
     },
     onError: (error) => {
       console.error('Error al hacer login:', error);
@@ -45,8 +48,11 @@ const SignInForm: React.FC = () => {
   const onSubmit = handleSubmit(async (values: LoginData) => {
     setLoading(true);
     try {
-      const responde = await mutation.mutateAsync(values);
-      login(responde)
+      const response = await mutation.mutateAsync(values);
+      if (response.isSuccess) {
+        login(response)
+      }
+      enqueueSnackbar("Bienvenido al portal de gestion de Quilino", { variant: 'success' });
     } catch (error) {
       enqueueSnackbar("Credenciales incorrectas", { variant: 'error' });
     } finally {
@@ -84,6 +90,16 @@ const SignInForm: React.FC = () => {
           helperText="Introduce tu contraseña"
 
         />
+
+        <Link
+          variant="body2"
+          sx={{ cursor: 'pointer', color: 'inherit' }}
+          onClick={() => setOpenDialog(true)}
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+
+
         <LoadingButton
           isLoading={loading}
           onClick={onSubmit}
@@ -96,7 +112,7 @@ const SignInForm: React.FC = () => {
           Iniciar Sesión
         </LoadingButton>
 
-
+        <ResetPassword open={openDialog} onClose={() => setOpenDialog(false)} />
       </Box>
     </FormProvider>
   );

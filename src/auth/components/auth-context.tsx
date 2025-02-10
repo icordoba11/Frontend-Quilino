@@ -3,20 +3,20 @@ import CryptoJS from 'crypto-js';
 import { UserResponse } from '../types/types';
 
 type AuthContextType = {
-    currentUser: string | null;  // Ahora es solo un string, representando el nombre o ID del usuario.
+    currentUser: number | null;
     isLoading: boolean;
     isAuthenticated: boolean;
     userRole: string | null;
     token: string | null;
     userName: string;
-    encryptedNumber: string | null;
+    encryptedNumber?: string | null;
     tokenReset: string | null;
     login: (user: UserResponse) => void;
     logout: () => void;
-    decryptData: (data: string) => string;
-    encryptData: (data: string) => string;
-    saveEncryptedNumber: (id: string) => void;
-    saveTokenReset: (token: string) => void;
+    decryptData?: (data: string) => string;
+    encryptData?: (data: string) => string;
+    saveEncryptedNumber?: (id: string) => void;
+    saveTokenReset?: (token: string) => void;
     clearResetId: () => void;
 };
 
@@ -28,7 +28,7 @@ export interface UserLogin {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [currentUser, setCurrentUser] = useState<string | null>(null); 
+    const [currentUser, setCurrentUser] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const decryptData = (data: string): string => {
@@ -76,19 +76,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     useEffect(() => {
-        setIsLoading(false);  
+        setIsLoading(false);
     }, []);
 
     const login = async (user: UserResponse) => {
         setIsAuthenticated(true);
         setUserRole(user.rol);
         setToken(user.token);
-        // setUserName(user.name); 
+        setCurrentUser(user.id);
 
         sessionStorage.setItem('isAuthenticated', 'true');
         sessionStorage.setItem('userRole', encryptData(user.rol));
         sessionStorage.setItem('token', user.token);
-        // sessionStorage.setItem('userName', encryptData(user.name));
+        sessionStorage.setItem('currentUser', user.id?.toString() || '');
+
     };
 
     const logout = () => {
@@ -140,6 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             saveEncryptedNumber,
             saveTokenReset,
             clearResetId,
+            
         }}>
             {children}
         </AuthContext.Provider>

@@ -23,7 +23,6 @@ export interface LoginData {
 }
 
 export interface UserResponse {
-
     isSuccess: boolean;
     id: number;
     rol: string;

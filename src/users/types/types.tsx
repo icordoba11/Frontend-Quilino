@@ -1,8 +1,19 @@
 export interface User {
     id?: string;
-    firstName: string;
-    lastName: string;
+    nombreUsuario: string;
     email: string
+    rol: string;
+    fechaRegistro: string;
+    password?: string;
+}
+
+export type Rol = {
     role: string;
 }
 
+
+export type ChangePassword = {
+    newPassword: string;
+    oldPassword: string;
+    repeatNewPassword: string;
+}

@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Checkbox, IconButton, CssBaseline, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, Popover, MenuItem } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
+import { Box, Typography, Checkbox, CssBaseline, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, MenuItem } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { columnsFirstTable, columnsSelectedEmployees } from '../utils/table-columns';
 import FilterDrawer from "./filter-drawer";
 import EditDrawer from "./edit-drawer";
 import { Fade } from "@mui/material";
-import BackupTableIcon from '@mui/icons-material/BackupTable';
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import employeeService from "../services/employee";
 import { Empleado } from "../types/employee-types";
-import CustomPopover from "../../shared/components/popover/custom-popover";
 import { useSnackbar } from "notistack";
 import { useEmployeesContext } from "./provider/employee-context";
+import SendTable from "./send-table";
+import ConfirmSelected from "./confirm-selected";
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 interface TablaConDrawerProps { }
 
@@ -24,22 +26,28 @@ const LoadingScreen = () => (
 );
 
 const TableEmployees: React.FC<TablaConDrawerProps> = () => {
+    const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
+    const { employees, setEmployees, isLoading, selected, setSelected, openDialog, setOpenDialog } = useEmployeesContext();
+
+    const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openPopover = Boolean(anchorEl);
-    const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
-    const [selected, setSelected] = useState<Set<Empleado>>(new Set());
+    const [selectedEmployee, setSelectedEmployee] = useState<Empleado | null>(null);
+
+
+
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     const [orderBy, setOrderBy] = useState<string>('nombre');
-    const [selectedEmployee, setSelectedEmployee] = useState<Empleado | null>(null);
-    const { employees, setEmployees, isLoading } = useEmployeesContext();
-
-    // useEffect(() => console.log(selected), [selected])
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, empleado: Empleado) => {
         setSelectedEmployee(empleado);
         setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+        setSelectedEmployee(null);
     };
 
     const handleEdit = () => {
@@ -50,30 +58,26 @@ const TableEmployees: React.FC<TablaConDrawerProps> = () => {
         }
     };
 
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-    };
+
 
 
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            const newSelecteds = new Set(employees?.map((n: any) => n));
+            const newSelecteds = new Set(employees?.map((n) => n.id) ?? []);
+
             setSelected(newSelecteds);
         } else {
             setSelected(new Set());
         }
     };
 
-    const handleClick = (empleado: Empleado) => {
-        const newSelected = new Set(selected);
-        if (newSelected.has(empleado)) {
-            newSelected.delete(empleado);
-        } else {
-            newSelected.add(empleado);
-        }
-
-        setSelected(newSelected);
-    };
+    const handleClick = useCallback((empleado: Empleado) => {
+        setSelected(prev => {
+            const newSelected = new Set(prev);
+            newSelected.has(empleado.id) ? newSelected.delete(empleado.id) : newSelected.add(empleado.id);
+            return newSelected;
+        });
+    }, []);
 
     const handleRequestSort = (property: string) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -135,10 +139,10 @@ const TableEmployees: React.FC<TablaConDrawerProps> = () => {
                                     </TableHead>
                                     <TableBody>
                                         {sortData(employees || [])?.map((empleado: Empleado) => (
-                                            <TableRow key={empleado.id} selected={selected.has(empleado)}>
+                                            <TableRow key={empleado.id} selected={selected.has(empleado.id)}>
                                                 <TableCell padding="checkbox">
                                                     <Checkbox
-                                                        checked={selected.has(empleado)}
+                                                        checked={selected.has(empleado.id)}
                                                         onChange={() => handleClick(empleado)}
                                                     />
                                                 </TableCell>
@@ -148,55 +152,68 @@ const TableEmployees: React.FC<TablaConDrawerProps> = () => {
                                                 <TableCell>{empleado.areaAdministrativa?.nombre || 'Área no disponible'}</TableCell>
                                                 <TableCell>{empleado.sueldos?.[0]?.fechaLiquidacion || 'Fecha de liquidación no disponible'}</TableCell>
                                                 <TableCell>
-                                                    <IconButton
-                                                        aria-label="Opciones"
-                                                        onClick={(e) => handlePopoverOpen(e, empleado)}
-                                                    >
-                                                        <MoreVertIcon />
+                                                    <IconButton onClick={() => {
+                                                        setSelectedEmployee(empleado);
+                                                        setOpen(true);
+                                                    }}>
+                                                        <EditIcon />
                                                     </IconButton>
-                                                    <CustomPopover
-                                                        open={openPopover}
-                                                        anchorEl={anchorEl}
-                                                        onClose={handlePopoverClose}
-                                                        anchorOrigin={{
-                                                            vertical: 'bottom',
-                                                            horizontal: 'left',
-                                                        }}
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'center',
-                                                        }}
-                                                    >
-                                                        <MenuItem onClick={() => { handleEdit(); handlePopoverClose(); }}>
-                                                            <EditIcon sx={{ marginRight: 1 }} />
-                                                            Editar
-                                                        </MenuItem>
-                                                        <MenuItem onClick={() => { navigate(`/${empleado.id}/historico-sueldos`) }}>
-                                                            <BackupTableIcon sx={{ marginRight: 1 }} />
-                                                            Recibos Históricos
-                                                        </MenuItem>
-                                                    </CustomPopover>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <IconButton onClick={() => {
+                                                        navigate(`/historics/${empleado.id}/list`)
+                                                    }}>
+                                                        <InsertDriveFileIcon />
+                                                    </IconButton>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
+
                         </Box>
 
                     )}
-                    <Box sx={{ padding: '20px' }}>
+                    <Box sx={{ paddingTop: '20px', display: ' flex', flexDirection: 'row', mt: 2, justifyContent: 'center' }}>
                         <Button
                             variant="contained"
-                            onClick={() => { }}
+                            onClick={() => setOpenDialog(true)}
+                            disabled={selected.size === 0}
+                            fullWidth
+                            sx={{ maxWidth: 500 }}
+
+
                         >
-                            Confirmar
+                            Enviar recibos de sueldo
                         </Button>
                     </Box>
 
                 </Box>
                 <EditDrawer open={open} onClose={() => setOpen(false)} empleado={selectedEmployee!} />
                 <FilterDrawer />
+                <ConfirmSelected
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    title="Empleados seleccionados"
+                    sx={{ width: '100%' }}
+                    content={
+                        <>
+                            <SendTable columns={columnsSelectedEmployees} selectedEmployeeIds={Array.from(selected)} />
+                            <IconButton
+                                sx={{
+                                    position: 'absolute',
+                                    top: 8,
+                                    right: 8,
+                                }}
+                                onClick={() => setOpenDialog(false)}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </>
+                    }
+                />
+
             </Box>
         </Fade>
     );

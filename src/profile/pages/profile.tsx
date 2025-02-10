@@ -3,6 +3,7 @@ import { Tabs, Tab, CssBaseline, Box, Typography, CardMedia, Divider } from "@mu
 import ProfileForm from "../components/profile-form";
 import ChangePasswordForm from "../components/change-password";
 
+
 const Profile = () => {
     const [value, setValue] = useState(0);
 

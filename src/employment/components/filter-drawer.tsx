@@ -28,7 +28,7 @@ const FilterDrawer: React.FC = () => {
     const [legajoMax, setLegajoMax] = useState("");
     const [area, setArea] = useState('null');
     const [activeField, setActiveField] = useState<string | null>(null);
-    const { employees, setEmployees, setIsLoading } = useEmployeesContext();
+    const { employees, setEmployees, setIsLoading, setIsError } = useEmployeesContext();
 
 
 
@@ -53,7 +53,6 @@ const FilterDrawer: React.FC = () => {
                 return await employeeService.getEmpleadosByName({ busquedaEmpleado, area });
 
             case Boolean(area !== "null" && legajoMin == "" && legajoMax == "" && !fechaLiquidacion && !busquedaEmpleado):
-                console.log("este")
                 return await employeeService.getEmpleadosByLegajo({ legajoMin: "1", legajoMax: "999999999", area });
 
             default:
@@ -62,15 +61,15 @@ const FilterDrawer: React.FC = () => {
     };
 
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, error } = useQuery({
         queryKey: ['getAllEmployees', legajoMin, legajoMax, fechaLiquidacion, busquedaEmpleado, area],
         queryFn: fetchEmpleados,
+
     });
 
     useEffect(() => {
         if (data) {
             setEmployees(data);
-            console.log("area ", area)
         }
     }, [data]);
 
@@ -103,7 +102,7 @@ const FilterDrawer: React.FC = () => {
         <Box sx={{
             width: 240,
             flexShrink: 0,
-            height: '100vh',
+            height: '120vh',
             position: 'relative',
             mt: -3,
             boxShadow: 10
@@ -114,7 +113,7 @@ const FilterDrawer: React.FC = () => {
                 sx={{
                     width: 240,
                     flexShrink: 0,
-                    height: '100vw',
+                    height: '100vh',
                     position: 'relative',
                     top: 0,
                     left: 0,
