@@ -17,31 +17,19 @@ export const paths = {
             create: '/empleo/new',
             edit: '/empleo/edit',
         },
-        multas: {
-            list: '/multas/list',
-            create: '/multas/new',
-            edit: '/multas/edit',
+        historic: {
+            list: (id: string) => `/historics/${id}/list`,
         },
-        recoleccion: {
-            list: '/recoleccion/list',
-            create: '/recoleccion/new',
-            edit: '/recoleccion/edit',
+        uploadFiles: {
+            list: '/upload-files/list'
         },
-        almacenamiento: {
-            list: '/almacenamiento/list',
-            create: '/almacenamiento/new',
-            edit: '/almacenamiento/edit',
-        },
-        geoEstadistica: {
-            list: '/geoEstadistica/list',
-            create: '/geoEstadistica/new',
-            edit: '/geoEstadistica/edit',
-        },
+
         profile: {
             edit: '/profile/edit',
         },
         users: {
             list: '/users/list',
+            new: '/users/new',
             edit: (id: string) => `/users/${id}/edit`,
         }
 

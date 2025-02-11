@@ -23,10 +23,10 @@ type UserNewEditFormProps = {
 export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormProps) {
     const methods = useForm<User>({
         defaultValues: {
-            firstName: "",
-            lastName: "",
+            nombreUsuario: "",
             email: "",
-            role: "",
+            rol: "",
+            fechaRegistro: "",
         },
         mode: "onChange",
     });
@@ -37,16 +37,16 @@ export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormP
     useEffect(() => {
         if (user) {
             reset({
-                firstName: user.firstName || "",
-                lastName: user.lastName || "",
+                nombreUsuario: user.nombreUsuario || "",
                 email: user.email || "",
-                role: user.role || "",
+                rol: user.rol || "",
+                fechaRegistro: user.fechaRegistro || "",
             });
-            setInitialRole(user.role || "");
+            setInitialRole(user.rol || "");
         }
     }, [user, reset]);
 
-    const roleValue = watch("role");
+    const roleValue = watch("rol");
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -56,7 +56,7 @@ export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormP
                         <Stack direction="row" spacing={5} sx={{ width: '100%', alignItems: 'center', pb: 5 }}>
                             <Iconify icon="material-symbols:person-edit-outline" width={35} />
                             <Typography variant='h5'>
-                                {`Editando usuario '${user?.firstName} ${user?.lastName}'`}
+                                {`Editando usuario '${user?.nombreUsuario}'`}
                             </Typography>
                         </Stack>
 
@@ -69,11 +69,10 @@ export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormP
                                 sm: 'repeat(2, 1fr)',
                             }}
                         >
-                            <RHFTextField name='firstName' label='Nombre' disabled />
-                            <RHFTextField name='lastName' label='Apellido' disabled />
+                            <RHFTextField name='nombreUsuario' label='Nombre de usuario' disabled />
                             <RHFTextField name='email' label='Email' disabled />
                             <RHFSelect
-                                name="role"
+                                name="rol"
                                 label="Rol"
                             >
                                 {ROLES.map((role) => (

@@ -3,7 +3,7 @@ import TabLayout from '../../shared/components/layouts/tab-layout';
 import SignInForm from '../components/sign-in/sign-in-form';
 import SignUpForm from '../components/sign-up/sign-up-form';
 import LoadingScreen from '../../shared/components/chargers/loading-screen';
-import userService from '../../auth/services/users';
+import userService from '../services/login';
 
 const Auth = () => {
     const { data, isLoading, isError } = useQuery({

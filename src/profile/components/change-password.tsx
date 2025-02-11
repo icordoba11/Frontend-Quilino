@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, Typography, Box, Grid, Button } from '@mui/material';
 import RHFTextField from '../../shared/components/form/rhf-text-field';
 import FormProvider from '../../shared/components/form/form-provider';
@@ -9,37 +9,47 @@ import { useSnackbar } from 'notistack';
 import userService from '../../users/services/users';
 import LoadingButton from '../../shared/components/chargers/loading-button';
 import ConfirmDialog from '../../shared/components/confirm-dialog/confirm-dialog';
-import { useAuth } from '../../auth/components/auth-context';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { yellow } from '@mui/material/colors';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { ChangePassword } from '../../users/types/types';
 
-interface ChangePassword {
-    newPassword: string;
-    repeatNewPassword: string;
-}
+
 
 const ChangePasswordForm = () => {
     const { enqueueSnackbar } = useSnackbar();
-    const { currentUser } = useAuth();
     const [open, setOpen] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+    const id = sessionStorage.getItem('currentUser');
 
     const methods = useForm<ChangePassword>({
-        defaultValues: { newPassword: '', repeatNewPassword: '', },
+        defaultValues: {
+            newPassword: '',
+            repeatNewPassword: '',
+        },
     });
-    const { handleSubmit } = methods;
+    const { handleSubmit, reset } = methods;
+
+
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, newPassword }: { id: string; newPassword: string }) =>
-            userService.updatePassword(id, newPassword),
-        onSuccess: () => {
-            enqueueSnackbar('Contraseña cambiada con éxito');
-            setOpen(false);
+        mutationFn: ({ id, oldPassword, newPassword }: { id: number; oldPassword: string; newPassword: string; }) =>
+            userService.updatePassword(id, oldPassword, newPassword),
+        onSuccess: (data) => {
+            if (data.isSuccess) {
+                enqueueSnackbar('Contraseña cambiada con éxito', { variant: 'success' });
+                reset();
+                setOpen(false);
+            } else if (data) {
+                enqueueSnackbar(data.message, { variant: 'error' });
+            } else {
+                enqueueSnackbar('Error cambiar contraseña, intente nuevamente', { variant: 'error' });
+            }
+
         },
         onError: () => {
             enqueueSnackbar('Error al cambiar la contraseña.', { variant: 'error' });
@@ -52,13 +62,9 @@ const ChangePasswordForm = () => {
             return;
         }
 
-        if (!currentUser?.uid) {
-            enqueueSnackbar('No se pudo encontrar el usuario.', { variant: 'error' });
-            return;
-        }
-
         updateMutation.mutate({
-            id: currentUser?.uid,
+            id: Number(id),
+            oldPassword: data.oldPassword,
             newPassword: data.newPassword,
         });
     };
@@ -71,7 +77,7 @@ const ChangePasswordForm = () => {
             <LoadingButton
                 onClick={handleConfirm}
                 isLoading={updateMutation.isPending}
-                sx={{ maxWidth: 200  }}
+                sx={{ maxWidth: 200 }}
             >
                 Guardar
             </LoadingButton>
@@ -105,6 +111,24 @@ const ChangePasswordForm = () => {
                     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                         <Box>
                             <RHFTextField
+                                name="oldPassword"
+                                label="Contraseña anterior"
+                                type={showPassword ? 'text' : 'password'}
+                                margin="normal"
+                                variant="outlined"
+                                required
+                                InputProps={{
+                                    endAdornment: (
+                                        <IconButton
+                                            onClick={() => setShowPassword(prev => !prev)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    ),
+                                }}
+                            />
+                            <RHFTextField
                                 name="newPassword"
                                 label="Nueva Contraseña"
                                 type={showPassword ? 'text' : 'password'}
@@ -117,7 +141,7 @@ const ChangePasswordForm = () => {
                                             onClick={() => setShowPassword(prev => !prev)}
                                             edge="end"
                                         >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
                                         </IconButton>
                                     ),
                                 }}
@@ -135,7 +159,7 @@ const ChangePasswordForm = () => {
                                             onClick={() => setShowRepeatPassword(prev => !prev)}
                                             edge="end"
                                         >
-                                            {showRepeatPassword ? <VisibilityOff /> : <Visibility />}
+                                            {showRepeatPassword ? <Visibility /> : <VisibilityOff />}
                                         </IconButton>
                                     ),
                                 }}
@@ -146,7 +170,7 @@ const ChangePasswordForm = () => {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={() => setOpen(true)}
+                                        onClick={() => { setOpen(true); }}
                                     >
                                         Guardar
                                     </Button>
@@ -160,7 +184,7 @@ const ChangePasswordForm = () => {
             <ConfirmDialog
                 open={open}
                 onClose={() => setOpen(false)}
-                title="Confirmar Cambio de Contraseña"
+                title=""
                 content={
                     <Box>
                         <IconButton
@@ -179,8 +203,8 @@ const ChangePasswordForm = () => {
                         <Typography variant="h5" textAlign="center">
                             ¿Estás seguro?
                         </Typography>
-                        <Typography variant="subtitle2" textAlign="center" color="grey">
-                            ¿Quieres guardar los cambios?
+                        <Typography variant="subtitle2" textAlign="center" color="grey" sx={{ mt: 2 }}>
+                            ¿Quieres cambiar la contraseña?
                         </Typography>
                     </Box>
                 }

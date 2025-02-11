@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import RHFTextField from '../../../shared/components/form/rhf-text-field';
 import FormProvider from '../../../shared/components/form/form-provider';
 
-import usersService from '../../services/users';
+import loginService from '../../services/login';
 import { UserData } from '../../types/types';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from '../../../hooks/use-router';
@@ -26,7 +26,7 @@ const SignUpForm: React.FC = () => {
   const mutation = useMutation({
     mutationFn: async (user: UserData) => {
       const userData = { ...user, Rol: "Administrador" };
-      const response = await usersService.createFirstUser(userData);
+      const response = await loginService.createFirstUser(userData);
       return response;
     },
     onSuccess: () => {

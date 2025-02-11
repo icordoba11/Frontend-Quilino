@@ -3,14 +3,19 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { Empleado } from '../types/employee-types';
-import { useForm, FormProvider } from 'react-hook-form'; // Importamos useForm y FormProvider
-import RHFTextField from '../../shared/components/form/rhf-text-field'; // Tu componente RHFTextField
-import React, { useEffect } from 'react';
+import { Empleado, updateEmployeeSchema } from '../types/employee-types';
+import { useForm, FormProvider } from 'react-hook-form';
+import RHFTextField from '../../shared/components/form/rhf-text-field';
+import { useEffect } from 'react';
 import { RHFSelect } from '../../shared/components/form/rhf-select';
 import MenuItem from '@mui/material/MenuItem';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import headerImg from '../../assets/images/editDrawerHeader.png'
+import Stack from '@mui/material/Stack';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import employeeService from '../services/employee';
+import { useSnackbar } from 'notistack';
+import { useEmployeesContext } from './provider/employee-context';
+
 
 interface EditDrawerProps {
     open: boolean;
@@ -19,28 +24,26 @@ interface EditDrawerProps {
 }
 
 export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps) {
+    const { enqueueSnackbar } = useSnackbar();
+    const { setEmployees } = useEmployeesContext();
 
     const methods = useForm<Empleado>({
         defaultValues: {
             nombre: '',
             apellido: '',
             genero: '',
-            condicionImpositiva: '',
-            horasDiarias: 0,
             fechaNacimiento: '',
-            fechaIngreso: '',
-            // tipo: '',
-            // areaAdministrativa: '',
-            // categoria: '',
-            // ubicacionTrabajo: '',
-            // responsabilidad: '',
-            // cantidadPersonas: '',
             celular: '',
             email: '',
-            numeroJubilacion: 0
         },
     });
+    const { handleSubmit, reset } = methods;
 
+    const { data, refetch } = useQuery({
+        queryKey: ['getAllEmployeesEdited'],
+        queryFn: () => employeeService.getAllEmpleados(),
+        enabled: false,
+    });
 
     useEffect(() => {
         if (empleado) {
@@ -48,30 +51,70 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                 nombre: empleado.nombre,
                 apellido: empleado.apellido,
                 genero: empleado.genero,
-                condicionImpositiva: empleado.condicionImpositiva,
-                horasDiarias: empleado.horasDiarias,
                 fechaNacimiento: empleado.fechaNacimiento,
-                fechaIngreso: empleado.fechaIngreso,
-                // tipo: empleado.tipo.nombre,
-                // areaAdministrativa: empleado.areaAdministrativa.nombre,
-                // categoria: empleado.categoria.nombre,
-                // ubicacionTrabajo: empleado.ubicacionTrabajo.nombre,
-                // geoLocalizacion: empleado.ubicacionTrabajo.geoLocalizacion,
-                // responsabilidad: empleado.responsabilidad.categoria,
-                // cantidadPersonas: empleado.responsabilidad.cantidadPersonas,
                 celular: empleado.celular,
                 email: empleado.email,
-                numeroJubilacion: empleado.numeroJubilacion
             });
         }
+        if (data != undefined) {
+            setEmployees(data);
+        }
 
-    }, [empleado, methods]);
+    }, [empleado, methods, open, data]);
 
-    const { handleSubmit } = methods;
+    const updateMutation = useMutation({
+        mutationFn: (form: updateEmployeeSchema) =>
+            employeeService.updateEmployee(form),
+        onSuccess: (data) => {
+            if (data.isSuccess) {
+                enqueueSnackbar(data.message, { variant: 'success' });
+                refetch();
+                onClose();
+                reset()
+            } else if (!data.isSuccess) {
+                enqueueSnackbar(data.message, { variant: 'error' });
+            } else {
+                enqueueSnackbar('Error editar empleado, intente nuevamente', { variant: 'error' });
+            }
+
+        },
+        onError: () => {
+            enqueueSnackbar('Error al editar los datos del empleado.', { variant: 'error' });
+        },
+    });
+
+
 
     const onSubmit = (data: Empleado) => {
-        // console.log('Datos actualizados:', data);
-        onClose();
+        const finalData: updateEmployeeSchema = {
+            Identificadores: {
+                Id: empleado!.id,
+                Legajo: null,
+                IdentificadorUnico: null,
+                IdentificadorUnicoLaboral: null
+            },
+            Repetibles: {
+                Nombre: null,
+                Apellido: null,
+                Genero: null,
+                CondicionImpositiva: null,
+                HorasDiarias: null,
+                FechaNacimiento: null,
+                FechaIngreso: null,
+                TipoEmpleadoId: null,
+                AreaAdministrativaId: null,
+                CategoriaId: null,
+                UbicacionTrabajoId: null,
+                ResponsabilidadId: null
+            },
+            Unicos: {
+                Celular: data.celular || null,
+                Email: data.email || null,
+                NumeroJubilacion: null
+            }
+        };
+
+        updateMutation.mutate(finalData)
     };
 
     const DrawerList = (
@@ -90,12 +133,14 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         label="Nombre"
                         variant="outlined"
                         margin="normal"
+                        disabled
                     />
                     <RHFTextField
                         name="apellido"
                         label="Apellido"
                         variant="outlined"
                         margin="normal"
+                        disabled
                     />
 
                     <RHFSelect
@@ -103,6 +148,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         label="Género"
                         defaultValue={empleado?.genero || ''}
                         margin="normal"
+                        disabled
                     >
                         <MenuItem value="Masculino">Masculino</MenuItem>
                         <MenuItem value="Femenino">Femenino</MenuItem>
@@ -115,6 +161,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         margin="normal"
                         type='date'
                         InputLabelProps={{ shrink: true }}
+                        disabled
                     />
 
                     <RHFTextField
@@ -129,99 +176,15 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         variant="outlined"
                         margin="normal"
                     />
-
-                    <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-                        Informacion Laboral
-                    </Typography>
-                    <Divider />
-                    <RHFTextField
-                        name="condicionImpositiva"
-                        label="Condición Impositiva"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <RHFTextField
-                        name="horasDiarias"
-                        label="Horas Diarias"
-                        variant="outlined"
-                        margin="normal"
-                    />
-
-                    <RHFTextField
-                        name="fechaIngreso"
-                        label="Fecha de Ingreso"
-                        variant="outlined"
-                        margin="normal"
-                        type='date'
-                        InputLabelProps={{ shrink: true }}
-                    />
-                    <RHFTextField
-                        name="tipo"
-                        label="Tipo de Empleado"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <RHFTextField
-                        name="areaAdministrativa"
-                        label="Área Administrativa"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-                        Categoria Laboral
-                    </Typography>
-                    <Divider />
-                    <RHFTextField
-                        name="categoria"
-                        label="Categoría"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <RHFTextField
-                        name="cantidadPersonas"
-                        label="Cantidad de personas cargo"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-                        Ubicacion Laboral
-                    </Typography>
-                    <Divider />
-                    <RHFTextField
-                        name="ubicacionTrabajo"
-                        label="Ubicación de Trabajo"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <RHFTextField
-                        name="geoLocalizacion"
-                        label="Geo localizacion"
-                        variant="outlined"
-                        margin="normal"
-                    />
-                    <RHFTextField
-                        name="responsabilidad"
-                        label="Responsabilidad"
-                        variant="outlined"
-                        margin="normal"
-                    />
-
-                    <RHFTextField
-                        name="numeroJubilacion"
-                        label="Número de Jubilación"
-                        variant="outlined"
-                        margin="normal"
-                    />
-
                     <Divider sx={{ marginY: 2 }} />
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Stack direction={'row'} spacing={4} >
                         <Button variant="contained" color="primary" type="submit">
                             Guardar
                         </Button>
-                        <Button variant="outlined" color="secondary" onClick={onClose}>
+                        <Button variant="outlined" onClick={onClose}>
                             Cancelar
                         </Button>
-                    </Box>
+                    </Stack>
                 </form>
             </FormProvider>
         </Box>

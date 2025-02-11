@@ -56,3 +56,50 @@ interface ReciboDeSueldo {
   fechaPago: string;
   items: any[];
 }
+
+export type SendEmployeesDate = {
+  fechaEnviaSueldos: string;
+  fechaLiquidacionSueldos: string;
+  employeeLits?: EmployeeId[];
+}
+export type SendEmployeesDateConvert = {
+  fechaEjecucion: string;
+  PeriodoLiquidacion: string;
+  EmpleadosEnviar?: EmployeeId[];
+}
+
+type EmployeeId = {
+  id: number;
+}
+
+export interface updateEmployeeSchema {
+
+  Identificadores: {
+    Id: number;
+    Legajo: null;
+    IdentificadorUnico: null;
+    IdentificadorUnicoLaboral: null;
+  },
+  Repetibles: {
+    Nombre: null;
+    Apellido: null;
+    Genero: null;
+    CondicionImpositiva: null;
+    HorasDiarias: null;
+    FechaNacimiento: null;
+    FechaIngreso: null;
+    TipoEmpleadoId: null;
+    AreaAdministrativaId: null;
+    CategoriaId: null;
+    UbicacionTrabajoId: null;
+    ResponsabilidadId: null;
+  },
+  Unicos: {
+    Celular: string | null;
+    Email: string | null;
+    NumeroJubilacion: null;
+  }
+
+};
+
+

@@ -1,29 +1,21 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import Container from '@mui/material/Container';
 import { useSnackbar } from 'notistack';
 import CustomBreadcrumbs from '../../shared/components/breadcrumbs/bread-crums';
-import UserForm from '../components/user-form';
 import { useRouter } from '../../hooks/use-router';
-import { useParams } from '../../hooks/use-params';
 import { paths } from '../../configs/constants/paths';
 import userService from '../services/users';
+import UserCreateForm from '../components/create-form';
 
 
 
-export default function UserEditPage() {
-    const params = useParams();
+export default function UserCreatePage() {
 
-    const { id } = params;
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
 
-    const { data } = useQuery({
-        queryKey: ['user', id],
-        queryFn: () => userService.findById(Number(id)),
-    });
-
-    const updateMutation = useMutation({
-        mutationFn: ({ id, rol }: { id: number, rol: string }) => userService.updateRole(Number(id), rol),
+    const createMutation = useMutation({
+        mutationFn: ({ nombreUsuario, email, password }: { nombreUsuario: string, email: string, password: string }) => userService.createUser(nombreUsuario, email, password),
         onSuccess: () => {
             enqueueSnackbar('User updated successfully!', { variant: 'success' });
             router.push(paths.main.users.list);
@@ -33,30 +25,25 @@ export default function UserEditPage() {
         },
     });
 
-    if (!id) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <Container maxWidth={'lg'}>
             <CustomBreadcrumbs
-                heading='Edicion de usuarios'
+                heading='Crear nuevo Usuario'
                 links={[
                     {
                         name: 'Lista de usuarios',
                         href: paths.main.users.list,
                     },
-                    { name: `Edicion de usuarios` },
+                    { name: `Creacion de usuarios` },
                 ]}
                 sx={{
                     mb: { xs: 3, md: 5 },
                 }}
             />
 
-            <UserForm
-                user={data}
-                onSubmit={values => updateMutation.mutate({ id: Number(id), rol: values.rol })}
-                isLoading={updateMutation.isPending}
+            <UserCreateForm
+                onSubmit={values => createMutation.mutate(values)}
+                isLoading={createMutation.isPending}
             />
         </Container>
     );

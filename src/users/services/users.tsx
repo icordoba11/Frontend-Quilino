@@ -3,9 +3,36 @@ import { User } from '../types/types';
 
 const userService = {
 
+    async createUser(nombreUsuario: string, email: string, password: string): Promise<any> {
+        try {
+            const { data } = await instance.post('/Accesos/registro', {
+                NombreUsuario: nombreUsuario,
+                Email: email,
+                Rol: 'user',
+                Contrasena: password,
+            });
+            return data;
+
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
     async findAll(): Promise<User[]> {
         try {
-            const { data } = await instance.get('/user/all');
+            const { data } = await instance.get('/Accesos/buscadorUsuarios');
+            return data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    async updateRole(id: number, rol: string) {
+        try {
+            const { data } = await instance.put('/Accesos/actualizarRol', {
+                Id: id,
+                Rol: rol
+            });
             return data;
         } catch (error) {
             return Promise.reject(error);
@@ -13,28 +40,11 @@ const userService = {
     },
 
 
-    async findById(id: string): Promise<User> {
+    async findById(id: number): Promise<User> {
         try {
-            const { data } = await instance.get(`/user/${id}`);
-            return data;
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    },
-
-    async getRoleById(uid: string): Promise<string> {
-        try {
-            const { data } = await instance.get(`/user/role/${uid}`);
-            console.log("service",data);
-            return data; 
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    },
-
-    async update(id: string, user: User) {
-        try {
-            const { data } = await instance.put(`/user/${id}`, user);
+            const { data } = await instance.get(`/Accesos/buscadorUsuario`, {
+                params: { id }
+            });
             return data;
         } catch (error) {
             return Promise.reject(error);
@@ -42,10 +52,15 @@ const userService = {
     },
 
 
-    async updatePassword(id: string, newPassword: string) {
+    async updatePassword(id: number, oldPassword: string, newPassword: string) {
         try {
-            const { data } = await instance.put(`/user/change-password/${id}`, { newPassword });
+            const { data } = await instance.put(`/Accesos/actualizarContrasena`, {
+                Id: id,
+                ContrasenaActual: oldPassword,
+                ContrasenaNueva: newPassword
+            });
             return data;
+
         } catch (error) {
             return Promise.reject(error);
         }
