@@ -18,7 +18,8 @@ export const paths = {
             edit: '/empleo/edit',
         },
         historic: {
-            list: (id: string) => `/historics/${id}/list`,
+            list: (id: string) => `/historics/${id}/${name}/list`,
+
         },
         uploadFiles: {
             list: '/upload-files/list'

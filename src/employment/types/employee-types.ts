@@ -64,8 +64,8 @@ export type SendEmployeesDate = {
 }
 export type SendEmployeesDateConvert = {
   fechaEjecucion: string;
-  PeriodoLiquidacion: string;
-  EmpleadosEnviar?: EmployeeId[];
+  fechaLiquidacion: string;
+  empleadosEnviar?: EmployeeId[];
 }
 
 type EmployeeId = {

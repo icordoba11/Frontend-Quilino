@@ -101,13 +101,13 @@ export default function MyRouter() {
                         </RoleGuard>
                     ),
                     children: [
-                        { path: ':id/list', element: <HistoricList /> },
+                        { path: ':id/:name/list', element: <HistoricList /> },
                     ],
                 },
                 {
                     path: '/upload-files',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                        <RoleGuard allowedRoles={['Usuario', 'Administrador']}>
                             <Outlet />
                         </RoleGuard>
                     ),
@@ -121,7 +121,7 @@ export default function MyRouter() {
                 {
                     path: '/profile',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                        <RoleGuard allowedRoles={['Usuario', 'Administrador']}>
                             <Outlet />
                         </RoleGuard>
                     ),
@@ -133,7 +133,7 @@ export default function MyRouter() {
                 {
                     path: '/users',
                     element: (
-                        <RoleGuard allowedRoles={['Administrador', 'user']}>
+                        <RoleGuard allowedRoles={['Administrador']}>
                             <Outlet />
                         </RoleGuard>
                     ),

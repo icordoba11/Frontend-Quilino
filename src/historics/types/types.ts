@@ -6,6 +6,7 @@ export interface HistoricListData {
     FechaLiquidacion: string;
     EmpleadoId: number;
     Empleado?: Empleado;
+    nombre:string;
   
 }
 

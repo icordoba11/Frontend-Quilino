@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Empleado } from "../../types/employee-types";
+import { useQuery } from "@tanstack/react-query";
+import employeeService from "../../services/employee";
 
 
 interface EmployeesContextType {

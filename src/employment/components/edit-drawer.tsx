@@ -45,6 +45,13 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
         enabled: false,
     });
 
+    // const { data: areas, refetch: refetchAreas } = useQuery({
+    //     queryKey: ['getAllAreas'],
+    //     queryFn: () => employeeService.getAllAreas(),
+       
+    // });
+
+
     useEffect(() => {
         if (empleado) {
             methods.reset({
@@ -59,6 +66,10 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
         if (data != undefined) {
             setEmployees(data);
         }
+        // if (open) {
+        //     refetchAreas();
+        //     console.log("areas", areas)
+        // }
 
     }, [empleado, methods, open, data]);
 
@@ -71,15 +82,18 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                 refetch();
                 onClose();
                 reset()
+                console.log("if", data)
             } else if (!data.isSuccess) {
-                enqueueSnackbar(data.message, { variant: 'error' });
+                console.log("else if", data)
+                enqueueSnackbar(data, { variant: 'error' });
             } else {
-                enqueueSnackbar('Error editar empleado, intente nuevamente', { variant: 'error' });
+                console.log("else ", data)
+                enqueueSnackbar(data, { variant: 'error' });
             }
 
         },
-        onError: () => {
-            enqueueSnackbar('Error al editar los datos del empleado.', { variant: 'error' });
+        onError: (data: any) => {
+            enqueueSnackbar(data, { variant: 'error' });
         },
     });
 

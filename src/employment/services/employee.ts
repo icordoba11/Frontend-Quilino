@@ -36,19 +36,54 @@ const employeeService = {
     },
 
     programarEnvioRecibosSueldo: async (params: SendEmployeesDateConvert) => {
-        const { data }: any = await instance.post('/EnvioEmpleados/enviarRecibosSueldo', params, {
-            headers: { 'Content-Type': 'application/json' }
-        });
-        return data;
+        try {
+            const { data }: any = await instance.post('/EnvioEmpleados/enviarRecibosSueldo',
+
+                {
+                    fechaEjecucion: params.fechaEjecucion,
+                    fechaLiquidacion: params.fechaLiquidacion,
+                    empleadosEnviar: params.empleadosEnviar
+                },
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+            return data;
+        } catch (error) {
+            throw error;
+        }
+
+
     },
 
     updateEmployee: async (form: updateEmployeeSchema) => {
-        const { data }: AxiosResponse = await instance.put('/ActualizarEmpleados/actualizarDatosEmpleado', form);
-        console.log(data);
-        return data;
+        try {
+            const response: AxiosResponse = await instance.put('/ActualizarEmpleados/actualizarDatosEmpleado', form);
+            console.log("response ", response.data)
+            return response.data;
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || "Error desconocido desde el servidor";
+            return errorMessage
+        }
 
-    }
+
+    },
+    getAllAreas: async (): Promise<[]> => {
+        try {
+            const { data }: AxiosResponse = await instance.get('/Areas/buscarAreas');
+            console.log(data)
+            return data;
+        } catch (error) {
+            throw error;
+        }
+
+    },
+
 
 };
 
 export default employeeService;
+
+
+
+
