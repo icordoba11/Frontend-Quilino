@@ -19,11 +19,11 @@ export default function UserEditPage() {
 
     const { data } = useQuery({
         queryKey: ['user', id],
-        queryFn: () => userService.findById(id!),
+        queryFn: () => userService.findById(Number(id)),
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, rol }: { id: number, rol: string }) => userService.updateRole(id, rol),
+        mutationFn: ({ id, rol }: { id: number, rol: string }) => userService.updateRole(Number(id), rol),
         onSuccess: () => {
             enqueueSnackbar('User updated successfully!', { variant: 'success' });
             router.push(paths.main.users.list);
@@ -34,7 +34,7 @@ export default function UserEditPage() {
     });
 
     if (!id) {
-        return <div>Loading...</div>;  
+        return <div>Loading...</div>;
     }
 
     return (
@@ -55,7 +55,7 @@ export default function UserEditPage() {
 
             <UserForm
                 user={data}
-                onSubmit={values => updateMutation.mutate({ id, user: values })}
+                onSubmit={values => updateMutation.mutate({ id: Number(id), rol: values.rol })}
                 isLoading={updateMutation.isPending}
             />
         </Container>

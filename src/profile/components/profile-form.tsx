@@ -2,30 +2,23 @@ import { useForm } from 'react-hook-form';
 import { Box, Button, CardMedia, Grid, Typography, Paper, IconButton } from "@mui/material";
 import RHFTextField from "../../shared/components/form/rhf-text-field";
 import FormProvider from "../../shared/components/form/form-provider";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import userService from "../../users/services/users";
-import { useAuth } from '../../auth/components/auth-context';
 import { User } from "../../users/types/types";
 import { useEffect, useState } from "react";
-import LoadingButton from "../../shared/components/chargers/loading-button";
 import ConfirmDialog from "../../shared/components/confirm-dialog/confirm-dialog";
 import CloseIcon from '@mui/icons-material/Close';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { red } from '@mui/material/colors';
-import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
+import LoadingScreen from '../../shared/components/chargers/loading-screen';
 
 const ProfileForm = () => {
-    const { currentUser } = useAuth();
+    const currentUser = sessionStorage.getItem('currentUser');
     const [open, setOpen] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
-    const { logout } = useAuth();
-    const navigate = useNavigate();
-
 
     const { data, isLoading } = useQuery({
-        queryKey: ['user', currentUser],
-        queryFn: () => currentUser ? userService.findById(currentUser) : Promise.resolve(null),
+        queryKey: ['currentUser', currentUser],
+        queryFn: () => currentUser ? userService.findById(Number(currentUser)) : Promise.resolve(null),
         enabled: !!currentUser,
     });
 
@@ -87,6 +80,10 @@ const ProfileForm = () => {
     //     );
     // };
 
+    if (isLoading) {
+        return <LoadingScreen />;
+    }
+
     return (
         <Paper
             elevation={5}
@@ -136,7 +133,8 @@ const ProfileForm = () => {
                             <Button
                                 variant='contained'
                                 onClick={() => setOpen(true)}
-                                disabled={isLoading}
+                                // disabled={isLoading}
+                                disabled
                             >
                                 Guardar
                             </Button>

@@ -32,16 +32,24 @@ const ChangePasswordForm = () => {
             repeatNewPassword: '',
         },
     });
-    const { handleSubmit } = methods;
+    const { handleSubmit, reset } = methods;
 
 
 
     const updateMutation = useMutation({
         mutationFn: ({ id, oldPassword, newPassword }: { id: number; oldPassword: string; newPassword: string; }) =>
             userService.updatePassword(id, oldPassword, newPassword),
-        onSuccess: () => {
-            enqueueSnackbar('Contraseña cambiada con éxito');
-            setOpen(false);
+        onSuccess: (data) => {
+            if (data.isSuccess) {
+                enqueueSnackbar('Contraseña cambiada con éxito', { variant: 'success' });
+                reset();
+                setOpen(false);
+            } else if (data) {
+                enqueueSnackbar(data.message, { variant: 'error' });
+            } else {
+                enqueueSnackbar('Error cambiar contraseña, intente nuevamente', { variant: 'error' });
+            }
+
         },
         onError: () => {
             enqueueSnackbar('Error al cambiar la contraseña.', { variant: 'error' });
@@ -162,13 +170,7 @@ const ChangePasswordForm = () => {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={() => {
-                                            if (methods.formState.isValid) {
-                                                setOpen(true);
-                                            } else {
-                                                enqueueSnackbar('Por favor, complete todos los campos correctamente.', { variant: 'error' });
-                                            }
-                                        }}
+                                        onClick={() => { setOpen(true); }}
                                     >
                                         Guardar
                                     </Button>

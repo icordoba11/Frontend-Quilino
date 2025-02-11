@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import instance from '../../configs/constants/axios-config';
 import { LoginData, UserData } from '../types/types';
 
-const usersService = {
+const loginService = {
 
     checkUsersExist: async () => {
         const url = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_API_BOOL_INICIAL}`;
@@ -33,15 +33,51 @@ const usersService = {
         try {
             const response: AxiosResponse = await instance.post('/Accesos/emailRecuperacion', {
                 Email: email,
-                Url: 'http://localhost:5173/auth/sign-in/reset-password?token='
+                Url: 'http://localhost:5173/auth/reset-password?token='
             });
             return response.data;
         } catch (error) {
             return Promise.reject(error);
         }
 
-    }
+    },
+
+    verifyToken: async (token: string) => {
+        try {
+            const response = await instance.get('/Accesos/estadoRecuperarContrasena', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+    },
+
+    resetPassword: async (id: number, newPassword: string, token: string): Promise<any> => {
+        try {
+            const response: AxiosResponse = await instance.put('/Accesos/recuperarContrasena',
+                {
+                    Id: id,
+                    Contrasena: newPassword,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            return response;
+
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
 
 };
 
-export default usersService;
+export default loginService;

@@ -8,10 +8,9 @@ import LoadingButton from '../../../shared/components/chargers/loading-button';
 import { useSnackbar } from 'notistack';
 import { useMutation } from '@tanstack/react-query';
 import { LoginData } from '../../types/types';
-import usersService from '../../services/users';
 import Link from '@mui/material/Link';
-import ResetPassword from './reset-password';
-
+import ResetPassword from './reset-password-form';
+import loginService from '../../services/login';
 
 
 const SignInForm: React.FC = () => {
@@ -31,16 +30,13 @@ const SignInForm: React.FC = () => {
 
   const mutation = useMutation({
     mutationFn: async (data: LoginData) => {
-      return usersService.login({
+      return loginService.login({
         NombreUsuario: data.NombreUsuario.trim(),
         Contrasena: data.Contrasena,
       });
     },
-    onSuccess: (data) => {
-
-    },
-    onError: (error) => {
-      console.error('Error al hacer login:', error);
+    onError: () => {
+      enqueueSnackbar("Error al hacer el login", { variant: 'error' });
     },
   });
 
@@ -51,8 +47,10 @@ const SignInForm: React.FC = () => {
       const response = await mutation.mutateAsync(values);
       if (response.isSuccess) {
         login(response)
+        enqueueSnackbar("Bienvenido al portal de gestion de Quilino", { variant: 'success' });
+      } else {
+        enqueueSnackbar("Credenciales incorrectas", { variant: 'error' });
       }
-      enqueueSnackbar("Bienvenido al portal de gestion de Quilino", { variant: 'success' });
     } catch (error) {
       enqueueSnackbar("Credenciales incorrectas", { variant: 'error' });
     } finally {
@@ -93,7 +91,7 @@ const SignInForm: React.FC = () => {
 
         <Link
           variant="body2"
-          sx={{ cursor: 'pointer', color: 'inherit' }}
+          sx={{ cursor: 'pointer', color: 'inherit', fontSize: '0.7rem', textAlign: 'right', display: 'block' }}
           onClick={() => setOpenDialog(true)}
         >
           ¿Olvidaste tu contraseña?

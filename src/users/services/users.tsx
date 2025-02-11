@@ -29,7 +29,10 @@ const userService = {
 
     async updateRole(id: number, rol: string) {
         try {
-            const { data } = await instance.put('/Accesos/actualizarRol', { Id: id, Rol: rol });
+            const { data } = await instance.put('/Accesos/actualizarRol', {
+                Id: id,
+                Rol: rol
+            });
             return data;
         } catch (error) {
             return Promise.reject(error);
@@ -39,17 +42,9 @@ const userService = {
 
     async findById(id: number): Promise<User> {
         try {
-            const { data } = await instance.get(`/user/${id}`);
-            return data;
-        } catch (error) {
-            return Promise.reject(error);
-        }
-    },
-
-    async getRoleById(uid: string): Promise<string> {
-        try {
-            const { data } = await instance.get(`/user/role/${uid}`);
-            console.log("service", data);
+            const { data } = await instance.get(`/Accesos/buscadorUsuario`, {
+                params: { id }
+            });
             return data;
         } catch (error) {
             return Promise.reject(error);

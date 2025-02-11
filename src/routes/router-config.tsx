@@ -10,7 +10,7 @@ import RoleGuard from './guards/role-guard';
 
 //Authentication
 const Auth = lazy(() => import('../auth/pages/auth'));
-
+const ForgotPassword = lazy(() => import('../auth/pages/reset-password'))
 //Employees
 const EmployeeList = lazy(() => import('../employment/pages/list'));
 //Dashboard
@@ -23,6 +23,8 @@ const UserEdit = lazy(() => import('../users/pages/edit'));
 const UserCreate = lazy(() => import('../users/pages/new'))
 //Upload Files
 const FileUpload = lazy(() => import('../upload/page/upload-files'));
+//Hisotrics
+const HistoricList = lazy(() => import('../historics/pages/list'))
 
 export default function MyRouter() {
     return useRoutes([
@@ -53,9 +55,12 @@ export default function MyRouter() {
                         <Outlet />
                     ),
                     children: [
-                        { path: 'confirm-sign-in', element: <h1>Confirm Sign In</h1> },
-                        { path: 'reset-password', element: <h1>Reset Password</h1> },
-                        { path: 'forgot-password', element: <h1>Forgot Password</h1> },
+                        {
+                            path: 'reset-password', element:
+                                <AuthLayout >
+                                    <ForgotPassword />
+                                </AuthLayout>
+                        },
                     ],
                 },
             ],
@@ -96,7 +101,7 @@ export default function MyRouter() {
                         </RoleGuard>
                     ),
                     children: [
-                        { path: ':id/list', element: <h1>historics</h1> },
+                        { path: ':id/list', element: <HistoricList /> },
                     ],
                 },
                 {

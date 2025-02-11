@@ -29,3 +29,9 @@ export interface UserResponse {
     token: string;
 
 }
+
+export type PayloadResetPassword = {
+    id: number;
+    newPassword: string;
+    token: string;
+}

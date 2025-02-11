@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import instance from '../../configs/constants/axios-config';
-import { Empleado, SendEmployeesDateConvert } from '../types/employee-types';
+import { Empleado, SendEmployeesDateConvert, updateEmployeeSchema } from '../types/employee-types';
 
 
 const employeeService = {
@@ -42,6 +42,12 @@ const employeeService = {
         return data;
     },
 
+    updateEmployee: async (form: updateEmployeeSchema) => {
+        const { data }: AxiosResponse = await instance.put('/ActualizarEmpleados/actualizarDatosEmpleado', form);
+        console.log(data);
+        return data;
+
+    }
 
 };
 

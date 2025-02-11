@@ -72,4 +72,34 @@ type EmployeeId = {
   id: number;
 }
 
+export interface updateEmployeeSchema {
+
+  Identificadores: {
+    Id: number;
+    Legajo: null;
+    IdentificadorUnico: null;
+    IdentificadorUnicoLaboral: null;
+  },
+  Repetibles: {
+    Nombre: null;
+    Apellido: null;
+    Genero: null;
+    CondicionImpositiva: null;
+    HorasDiarias: null;
+    FechaNacimiento: null;
+    FechaIngreso: null;
+    TipoEmpleadoId: null;
+    AreaAdministrativaId: null;
+    CategoriaId: null;
+    UbicacionTrabajoId: null;
+    ResponsabilidadId: null;
+  },
+  Unicos: {
+    Celular: string | null;
+    Email: string | null;
+    NumeroJubilacion: null;
+  }
+
+};
+
 

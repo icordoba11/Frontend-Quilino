@@ -70,10 +70,9 @@ export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormP
                             }}
                         >
                             <RHFTextField name='nombreUsuario' label='Nombre de usuario' disabled />
-                            <RHFTextField name='lastName' label='Apellido' disabled />
                             <RHFTextField name='email' label='Email' disabled />
                             <RHFSelect
-                                name="role"
+                                name="rol"
                                 label="Rol"
                             >
                                 {ROLES.map((role) => (

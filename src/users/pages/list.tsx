@@ -45,7 +45,7 @@ const UsersList: React.FC = () => {
             <Box sx={{ display: 'flex', justifyContent: 'flex-end'}} >
                 <Button
                     variant="text"
-                    sx={{ m: 2, borderRadius: 4 }}
+                    sx={{ m: 2, borderRadius: 4, height: 10 }}
                     startIcon={<AddIcon />}
                     onClick={() => router.replace(paths.main.users.new)}
                 >
