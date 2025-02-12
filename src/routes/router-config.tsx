@@ -24,8 +24,10 @@ const UserCreate = lazy(() => import('../users/pages/new'))
 //Upload Files
 const FileUpload = lazy(() => import('../upload/page/upload-files'));
 //Hisotrics
-const HistoricList = lazy(() => import('../historics/pages/list'))
-
+const HistoricList = lazy(() => import('../historics/pages/list'));
+//Error Pages
+const WithoutPermission = lazy(() => import('../error-pages/pages/without-permission'));
+const ErrorPage = lazy(() => import('../error-pages/pages/not-found-404'))
 export default function MyRouter() {
     return useRoutes([
         {
@@ -82,7 +84,7 @@ export default function MyRouter() {
                 {
                     path: '/empleo',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                        <RoleGuard allowedRoles={['Usuario', 'Administrador']}>
                             <Outlet />
                         </RoleGuard>
                     ),
@@ -96,7 +98,7 @@ export default function MyRouter() {
                 {
                     path: '/historics',
                     element: (
-                        <RoleGuard allowedRoles={['user', 'Administrador']}>
+                        <RoleGuard allowedRoles={['Usuario', 'Administrador']}>
                             <Outlet />
                         </RoleGuard>
                     ),
@@ -144,11 +146,11 @@ export default function MyRouter() {
                         { path: ':id/edit', element: <UserEdit /> },
                     ],
                 },
-                { path: 'coming-soon', element: <h1>Coming Soon</h1> },
-                { path: 'maintenance', element: <h1>Maintenance</h1> },
-                { path: '500', element: <h1>Page 500</h1> },
-                { path: '404', element: <h1>Page 404</h1> },
-                { path: '403', element: <h1>Page 403</h1> },
+                // { path: 'coming-soon', element: <h1>Coming Soon</h1> },
+                // { path: 'maintenance', element: <h1>Maintenance</h1> },
+                { path: 'without-permission', element: <WithoutPermission /> },
+                { path: '404', element: <ErrorPage /> },
+                // { path: '403', element: <h1>Page 403</h1> },
             ],
         },
         { path: '*', element: <Navigate to='/404' replace /> },

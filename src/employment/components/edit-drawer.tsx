@@ -90,6 +90,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
         }
         if (open) {
             refetchAreas();
+            console.log(areas)
         }
 
     }, [empleado, methods, open, data]);
@@ -118,7 +119,6 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
 
 
     const onSubmit = (data: FormValues) => {
-        // Crear el objeto final solo con los campos que han cambiado
         const finalData: updateEmployeeSchema = {
             Identificadores: {
                 Id: empleado!.id,
@@ -323,7 +323,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                     >
                         {(areas as Record<string, any>)?.responsabilidadesDTO?.map((responsabilidad: any) => (
                             <MenuItem key={responsabilidad.id} value={String(responsabilidad.id)}>
-                                {responsabilidad.nombre}
+                                {responsabilidad.categoria}
                             </MenuItem>
                         ))}
                     </RHFSelect>

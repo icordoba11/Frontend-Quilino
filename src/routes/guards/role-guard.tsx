@@ -15,7 +15,7 @@ const RoleGuard = ({ children, allowedRoles }: RoleGuardProps) => {
     }
 
     if (userRole && !allowedRoles.includes(userRole)) {
-        return <Navigate to={paths.page404} />;
+        return <Navigate to={paths.withoutPermission} />;
     }
 
     return children;
