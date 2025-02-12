@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Typography, Box, Grid, Button } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid, Button, CircularProgress } from '@mui/material';
 import RHFTextField from '../../shared/components/form/rhf-text-field';
 import FormProvider from '../../shared/components/form/form-provider';
 import { useForm } from 'react-hook-form';
@@ -74,14 +74,15 @@ const ChangePasswordForm = () => {
             await handleSubmit(onSubmit)();
         };
         return (
-            <LoadingButton
+            <Button
                 onClick={handleConfirm}
-                isLoading={updateMutation.isPending}
+                disabled={updateMutation.isPending}
                 sx={{ maxWidth: 200 }}
             >
-                Guardar
-            </LoadingButton>
+                {updateMutation.isPending ? <CircularProgress size={24} /> : 'Guardar'}
+            </Button>
         );
+
     };
 
     return (

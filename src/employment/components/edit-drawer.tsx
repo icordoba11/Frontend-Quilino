@@ -15,6 +15,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import employeeService from '../services/employee';
 import { useSnackbar } from 'notistack';
 import { useEmployeesContext } from './provider/employee-context';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface EditDrawerProps {
@@ -44,13 +45,9 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
             areaAdministrativa: null,
             ubicacionTrabajo: null,
             responsabilidad: null,
-
-
-
-
         },
     });
-    const { handleSubmit, reset } = methods;
+    const { handleSubmit, reset, formState: { isValid } } = methods;
 
     const { data, refetch } = useQuery({
         queryKey: ['getAllEmployeesEdited'],
@@ -87,11 +84,13 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
         }
         if (data != undefined) {
             setEmployees(data);
+
         }
         if (open) {
             refetchAreas();
-            console.log(areas)
         }
+
+
 
     }, [empleado, methods, open, data]);
 
@@ -103,7 +102,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                 enqueueSnackbar(data.message, { variant: 'success' });
                 refetch();
                 onClose();
-                reset()
+                reset();
             } else if (!data.isSuccess) {
                 enqueueSnackbar(data, { variant: 'error' });
             } else {
@@ -141,7 +140,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                     new Date(data.fechaIngreso).toISOString().split('T')[0] !==
                     new Date(empleado?.fechaIngreso!).toISOString().split('T')[0]
                     ? new Date(data.fechaIngreso).toISOString() : null,
-
+                FuncionId: data.funcion !== empleado?.funcion.id ? data.funcion : null,
                 TipoEmpleadoId: data.tipo !== empleado?.tipo.id ? data.tipo : null,
                 AreaAdministrativaId: data.areaAdministrativa !== empleado?.areaAdministrativa.id ? data.areaAdministrativa : null,
                 CategoriaId: data.categoria !== empleado?.categoria.id ? data.categoria : null,
@@ -156,14 +155,13 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
 
         };
 
-        // console.log("final ",finalData);
-        // Llamar a la mutación para actualizar los datos
         updateMutation.mutate(finalData)
     };
 
 
+
     const DrawerList = (
-        <Box sx={{ width: 400, mt: 10, p: 3 }} role="presentation">
+        <Box sx={{ width: 370, mt: 10, p: 3 }} role="presentation">
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Box textAlign={'center'}>
@@ -185,7 +183,6 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         label="Apellido"
                         variant="outlined"
                         margin="normal"
-
                     />
 
                     <RHFSelect
@@ -252,9 +249,10 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                     <RHFSelect
                         name="funcion"
                         label="Funcion"
-                        defaultValue={empleado?.funcion.id ? String(empleado?.funcion.id) : ''}
+                        defaultValue={empleado?.funcion?.id ? String(empleado.funcion.id) : ''}
                         margin="normal"
                     >
+                        <MenuItem value="0">Sin función asignada</MenuItem>
                         {(areas as Record<string, any>)?.funcionesDTO?.map((funcion: any) => (
                             <MenuItem key={funcion.id} value={String(funcion.id)}>
                                 {funcion.nombre}
@@ -328,12 +326,20 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         ))}
                     </RHFSelect>
 
-                    <Stack direction={'row'} spacing={4} >
-                        <Button variant="contained" color="primary" type="submit">
-                            Guardar
-                        </Button>
-                        <Button variant="outlined" onClick={onClose}>
+                    <Stack direction={'row'} spacing={2} sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }} >
+
+                        <Button variant="outlined" color='error' onClick={onClose}>
                             Cancelar
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            loading={updateMutation.isPending}
+                            disabled={!isValid || updateMutation.isPending}
+                            style={{ minWidth: '100px' }}
+                        >
+                            {updateMutation.isPending ? <CircularProgress size={24} /> : 'Guardar'}
                         </Button>
                     </Stack>
                 </form>
