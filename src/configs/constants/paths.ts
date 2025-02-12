@@ -3,7 +3,7 @@ export const paths = {
     maintenance: '/maintenance',
     page403: '/403',
     page404: '/404',
-    page500: '/500',
+    withoutPermission: '/without-permission',
     auth: {
         signIn: '/auth/sign-in',
         confirmSignIn: '/auth/confirm-sign-in',
