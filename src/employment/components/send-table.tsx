@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, RadioGroup, FormControlLabel, Radio, Stack } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, RadioGroup, FormControlLabel, Radio, Stack, Button } from '@mui/material';
 import { useEmployeesContext } from './provider/employee-context';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -8,7 +8,7 @@ import RHFTextField from '../../shared/components/form/rhf-text-field';
 import FormProvider from '../../shared/components/form/form-provider';
 import { useForm } from 'react-hook-form';
 import { SendEmployeesDate } from '../types/employee-types';
-import LoadingButton from '@mui/lab/LoadingButton';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface TableProps {
@@ -20,18 +20,19 @@ const SendTable: React.FC<TableProps> = ({ columns, selectedEmployeeIds }) => {
   const { employees, setSelected, setOpenDialog } = useEmployeesContext();
   const { enqueueSnackbar } = useSnackbar();
   const [sendOption, setSendOption] = useState("sendNow");
-
+  const [isLoading, setIsLoading] = useState(false);
+  const fechaActual = new Date();
 
   const methods = useForm<SendEmployeesDate>({
     defaultValues: {
-      fechaEnviaSueldos: new Date().toISOString().split('T')[0],
+      fechaEnviaSueldos: fechaActual.toISOString().split('.')[0],
       fechaLiquidacionSueldos: '',
       employeeLits: selectedEmployeeIds.map(id => ({ id })),
     },
   });
 
 
-  const { handleSubmit, setValue, reset } = methods;
+  const { handleSubmit, setValue, reset, formState: { isValid } } = methods;
 
   const filteredEmployees = employees.filter(employee =>
     selectedEmployeeIds.includes(employee.id)
@@ -49,10 +50,12 @@ const SendTable: React.FC<TableProps> = ({ columns, selectedEmployeeIds }) => {
       enqueueSnackbar("¡Envío exitoso!", { variant: 'success' });
       reset();
       setSelected(new Set());
+      setIsLoading(false);
       setOpenDialog(false);
     },
     onError: () => {
       enqueueSnackbar("Hubo un error al enviar los datos. Por favor, inténtalo nuevamente.", { variant: 'error' });
+      setIsLoading(false);
     },
   });
 
@@ -67,12 +70,13 @@ const SendTable: React.FC<TableProps> = ({ columns, selectedEmployeeIds }) => {
   const onSubmit = (data: SendEmployeesDate) => {
     const payload = {
       fechaEjecucion: data.fechaEnviaSueldos,
-      PeriodoLiquidacion: data.fechaLiquidacionSueldos,
-      EmpleadosEnviar: data.employeeLits,
+      fechaLiquidacion: data.fechaLiquidacionSueldos,
+      empleadosEnviar: data.employeeLits,
     };
-
+    setIsLoading(true);
     sendMutation.mutate(payload);
   };
+
 
 
   return (
@@ -149,14 +153,14 @@ const SendTable: React.FC<TableProps> = ({ columns, selectedEmployeeIds }) => {
               required
             />
 
-            <LoadingButton
+            <Button
               type='submit'
               variant='contained'
-            // loading={isLoading}
-            // disabled={!isValid || isLoading || roleValue === initialRole}
+              loading={isLoading}
+              disabled={!isValid || isLoading}
             >
-              Confirmar
-            </LoadingButton>
+              {isLoading ? <CircularProgress /> : 'Confirmar'}
+            </Button>
           </Stack>
         </FormProvider>
       </Box>

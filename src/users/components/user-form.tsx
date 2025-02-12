@@ -21,6 +21,9 @@ type UserNewEditFormProps = {
 };
 
 export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormProps) {
+    const currentUserId = sessionStorage.getItem('currentUser') ?? '';
+    const isCurrentUser = String(user?.id) === currentUserId; 
+
     const methods = useForm<User>({
         defaultValues: {
             nombreUsuario: "",
@@ -33,6 +36,7 @@ export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormP
 
     const { handleSubmit, reset, formState: { isValid }, watch } = methods;
     const [initialRole, setInitialRole] = useState<string>("");
+
 
     useEffect(() => {
         if (user) {
@@ -74,6 +78,7 @@ export default function UserForm({ user, onSubmit, isLoading }: UserNewEditFormP
                             <RHFSelect
                                 name="rol"
                                 label="Rol"
+                                disabled={isCurrentUser}
                             >
                                 {ROLES.map((role) => (
                                     <MenuItem key={role.value} value={role.value}>

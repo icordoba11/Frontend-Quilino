@@ -8,7 +8,7 @@ const userService = {
             const { data } = await instance.post('/Accesos/registro', {
                 NombreUsuario: nombreUsuario,
                 Email: email,
-                Rol: 'user',
+                Rol: 'Usuario',
                 Contrasena: password,
             });
             return data;

@@ -20,6 +20,7 @@ const columns = [
 ];
 
 const UsersList: React.FC = () => {
+
     const { data } = useQuery({
         queryKey: ['users'],
         queryFn: () => userService.findAll(),
@@ -40,9 +41,9 @@ const UsersList: React.FC = () => {
             <CustomBreadcrumbs
                 heading='User List'
                 links={[{ name: 'User list' }]}
-               
+
             />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end'}} >
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                 <Button
                     variant="text"
                     sx={{ m: 2, borderRadius: 4, height: 10 }}
@@ -59,6 +60,7 @@ const UsersList: React.FC = () => {
                             key={user.id}
                             row={user}
                             onEdit={() => handleEdit(user.id ?? '')}
+
                         />
                     ))}
                 </TableBody>

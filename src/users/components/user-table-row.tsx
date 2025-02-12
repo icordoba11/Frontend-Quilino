@@ -13,11 +13,13 @@ type UserTableRowProps = {
     row: User;
     onEdit: () => void;
 
+
 };
 
-export default function UserTableRow({ row, onEdit }: UserTableRowProps) {
+export default function UserTableRow({ row, onEdit  }: UserTableRowProps) {
     const { nombreUsuario, email, rol, fechaRegistro } = row;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+ 
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
