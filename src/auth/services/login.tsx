@@ -33,7 +33,7 @@ const loginService = {
         try {
             const response: AxiosResponse = await instance.post('/Accesos/emailRecuperacion', {
                 Email: email,
-                Url: 'http://localhost:5173/auth/reset-password?token='
+                Url: `${import.meta.env.VITE_API_RESET_PASSWORD}/auth/reset-password?token=`
             });
             return response.data;
         } catch (error) {

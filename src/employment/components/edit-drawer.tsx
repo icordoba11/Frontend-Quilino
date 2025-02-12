@@ -3,7 +3,7 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { Empleado, updateEmployeeSchema } from '../types/employee-types';
+import { Empleado, FormValues, updateEmployeeSchema } from '../types/employee-types';
 import { useForm, FormProvider } from 'react-hook-form';
 import RHFTextField from '../../shared/components/form/rhf-text-field';
 import { useEffect } from 'react';
@@ -27,14 +27,27 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
     const { enqueueSnackbar } = useSnackbar();
     const { setEmployees } = useEmployeesContext();
 
-    const methods = useForm<Empleado>({
+    const methods = useForm<FormValues>({
         defaultValues: {
-            nombre: '',
-            apellido: '',
-            genero: '',
-            fechaNacimiento: '',
-            celular: '',
-            email: '',
+            nombre: null,
+            apellido: null,
+            genero: null,
+            fechaNacimiento: null,
+            celular: null,
+            email: null,
+            horasDiarias: null,
+            fechaIngreso: null,
+            condicionImpositiva: null,
+            categoria: null,
+            funcion: null,
+            tipo: null,
+            areaAdministrativa: null,
+            ubicacionTrabajo: null,
+            responsabilidad: null,
+
+
+
+
         },
     });
     const { handleSubmit, reset } = methods;
@@ -45,11 +58,11 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
         enabled: false,
     });
 
-    // const { data: areas, refetch: refetchAreas } = useQuery({
-    //     queryKey: ['getAllAreas'],
-    //     queryFn: () => employeeService.getAllAreas(),
-       
-    // });
+    const { data: areas, refetch: refetchAreas } = useQuery({
+        queryKey: ['getAllAreas'],
+        queryFn: () => employeeService.getAllAreas(),
+        enabled: false,
+    });
 
 
     useEffect(() => {
@@ -61,15 +74,23 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                 fechaNacimiento: empleado.fechaNacimiento,
                 celular: empleado.celular,
                 email: empleado.email,
+                horasDiarias: empleado.horasDiarias,
+                fechaIngreso: empleado.fechaIngreso,
+                condicionImpositiva: empleado.condicionImpositiva,
+                categoria: empleado.categoria.id,
+                funcion: empleado.funcion.id,
+                tipo: empleado.tipo.id,
+                areaAdministrativa: empleado.areaAdministrativa.id,
+                ubicacionTrabajo: empleado.ubicacionTrabajo.id,
+                responsabilidad: empleado.responsabilidad.id,
             });
         }
         if (data != undefined) {
             setEmployees(data);
         }
-        // if (open) {
-        //     refetchAreas();
-        //     console.log("areas", areas)
-        // }
+        if (open) {
+            refetchAreas();
+        }
 
     }, [empleado, methods, open, data]);
 
@@ -82,12 +103,9 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                 refetch();
                 onClose();
                 reset()
-                console.log("if", data)
             } else if (!data.isSuccess) {
-                console.log("else if", data)
                 enqueueSnackbar(data, { variant: 'error' });
             } else {
-                console.log("else ", data)
                 enqueueSnackbar(data, { variant: 'error' });
             }
 
@@ -99,7 +117,8 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
 
 
 
-    const onSubmit = (data: Empleado) => {
+    const onSubmit = (data: FormValues) => {
+        // Crear el objeto final solo con los campos que han cambiado
         const finalData: updateEmployeeSchema = {
             Identificadores: {
                 Id: empleado!.id,
@@ -108,31 +127,43 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                 IdentificadorUnicoLaboral: null
             },
             Repetibles: {
-                Nombre: null,
-                Apellido: null,
-                Genero: null,
-                CondicionImpositiva: null,
-                HorasDiarias: null,
-                FechaNacimiento: null,
-                FechaIngreso: null,
-                TipoEmpleadoId: null,
-                AreaAdministrativaId: null,
-                CategoriaId: null,
-                UbicacionTrabajoId: null,
-                ResponsabilidadId: null
+                Nombre: data.nombre !== empleado?.nombre ? data.nombre : null,
+                Apellido: data.apellido !== empleado?.apellido ? data.apellido : null,
+                Genero: data.genero !== empleado?.genero ? data.genero : null,
+                CondicionImpositiva: data.condicionImpositiva !== empleado?.condicionImpositiva ? data.condicionImpositiva : null,
+                HorasDiarias: data.horasDiarias !== empleado?.horasDiarias ? data.horasDiarias : null,
+                FechaNacimiento: data.fechaNacimiento &&
+                    new Date(data.fechaNacimiento).toISOString().split('T')[0] !==
+                    new Date(empleado?.fechaNacimiento!).toISOString().split('T')[0]
+                    ? new Date(data.fechaNacimiento).toISOString() : null,
+
+                FechaIngreso: data.fechaIngreso &&
+                    new Date(data.fechaIngreso).toISOString().split('T')[0] !==
+                    new Date(empleado?.fechaIngreso!).toISOString().split('T')[0]
+                    ? new Date(data.fechaIngreso).toISOString() : null,
+
+                TipoEmpleadoId: data.tipo !== empleado?.tipo.id ? data.tipo : null,
+                AreaAdministrativaId: data.areaAdministrativa !== empleado?.areaAdministrativa.id ? data.areaAdministrativa : null,
+                CategoriaId: data.categoria !== empleado?.categoria.id ? data.categoria : null,
+                UbicacionTrabajoId: data.ubicacionTrabajo !== empleado?.ubicacionTrabajo.id ? data.ubicacionTrabajo : null,
+                ResponsabilidadId: data.responsabilidad !== empleado?.responsabilidad.id ? data.responsabilidad : null
             },
             Unicos: {
-                Celular: data.celular || null,
-                Email: data.email || null,
+                Celular: data.celular !== empleado?.celular ? data.celular : null,
+                Email: data.email !== empleado?.email ? data.email : null,
                 NumeroJubilacion: null
             }
+
         };
 
+        // console.log("final ",finalData);
+        // Llamar a la mutación para actualizar los datos
         updateMutation.mutate(finalData)
     };
 
+
     const DrawerList = (
-        <Box sx={{ width: 300, mt: 10, p: 3 }} role="presentation">
+        <Box sx={{ width: 400, mt: 10, p: 3 }} role="presentation">
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Box textAlign={'center'}>
@@ -147,14 +178,14 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         label="Nombre"
                         variant="outlined"
                         margin="normal"
-                        disabled
+
                     />
                     <RHFTextField
                         name="apellido"
                         label="Apellido"
                         variant="outlined"
                         margin="normal"
-                        disabled
+
                     />
 
                     <RHFSelect
@@ -162,7 +193,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         label="Género"
                         defaultValue={empleado?.genero || ''}
                         margin="normal"
-                        disabled
+
                     >
                         <MenuItem value="Masculino">Masculino</MenuItem>
                         <MenuItem value="Femenino">Femenino</MenuItem>
@@ -175,7 +206,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         margin="normal"
                         type='date'
                         InputLabelProps={{ shrink: true }}
-                        disabled
+
                     />
 
                     <RHFTextField
@@ -190,7 +221,113 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
                         variant="outlined"
                         margin="normal"
                     />
+
+                    <Typography variant="h6" gutterBottom>
+                        Informacion Laboral
+                    </Typography>
                     <Divider sx={{ marginY: 2 }} />
+
+                    <RHFTextField
+                        name="fechaIngreso"
+                        label="Fecha de ingreso"
+                        variant="outlined"
+                        margin="normal"
+                    />
+
+                    <RHFTextField
+                        name="horasDiarias"
+                        label="Horas diarias"
+                        variant="outlined"
+                        margin="normal"
+
+                    />
+                    <RHFTextField
+                        name="condicionImpositiva"
+                        label="Condicion impositiva"
+                        variant="outlined"
+                        margin="normal"
+
+                    />
+
+                    <RHFSelect
+                        name="funcion"
+                        label="Funcion"
+                        defaultValue={empleado?.funcion.id ? String(empleado?.funcion.id) : ''}
+                        margin="normal"
+                    >
+                        {(areas as Record<string, any>)?.funcionesDTO?.map((funcion: any) => (
+                            <MenuItem key={funcion.id} value={String(funcion.id)}>
+                                {funcion.nombre}
+                            </MenuItem>
+                        ))}
+                    </RHFSelect>
+
+                    <RHFSelect
+                        name="tipo"
+                        label="Tipo de empleado"
+                        defaultValue={empleado?.tipo.id ? String(empleado?.tipo.id) : ''}
+                        margin="normal"
+                    >
+                        {(areas as Record<string, any>)?.tiposDTO?.map((tipo: any) => (
+                            <MenuItem key={tipo.id} value={String(tipo.id)}>
+                                {tipo.nombre}
+                            </MenuItem>
+                        ))}
+                    </RHFSelect>
+
+                    <RHFSelect
+                        name="categoria"
+                        label="Categoria"
+                        defaultValue={empleado?.categoria.id ? String(empleado?.categoria.id) : ''}
+                        margin="normal"
+                    >
+                        {(areas as Record<string, any>)?.categoriasDTO?.map((categoria: any) => (
+                            <MenuItem key={categoria.id} value={String(categoria.id)}>
+                                {categoria.nombre}
+                            </MenuItem>
+                        ))}
+                    </RHFSelect>
+
+                    <RHFSelect
+                        name="areaAdministrativa"
+                        label="Area administrativa"
+                        defaultValue={empleado?.areaAdministrativa.id ? String(empleado?.areaAdministrativa.id) : ''}
+                        margin="normal"
+                    >
+                        {(areas as Record<string, any>)?.areasAdministrativasDTO?.map((areaAdministrativa: any) => (
+                            <MenuItem key={areaAdministrativa.id} value={String(areaAdministrativa.id)}>
+                                {areaAdministrativa.nombre}
+                            </MenuItem>
+                        ))}
+                    </RHFSelect>
+
+
+                    <RHFSelect
+                        name="ubicacionTrabajo"
+                        label="Ubicacion laboral"
+                        defaultValue={empleado?.ubicacionTrabajo.id ? String(empleado?.ubicacionTrabajo.id) : ''}
+                        margin="normal"
+                    >
+                        {(areas as Record<string, any>)?.ubicacionesTrabajoDTO?.map((ubicacionTrabajo: any) => (
+                            <MenuItem key={ubicacionTrabajo.id} value={String(ubicacionTrabajo.id)}>
+                                {ubicacionTrabajo.nombre}
+                            </MenuItem>
+                        ))}
+                    </RHFSelect>
+
+                    <RHFSelect
+                        name="responsabilidad"
+                        label="Responsabilidad"
+                        defaultValue={empleado?.responsabilidad.id ? String(empleado?.responsabilidad.id) : ''}
+                        margin="normal"
+                    >
+                        {(areas as Record<string, any>)?.responsabilidadesDTO?.map((responsabilidad: any) => (
+                            <MenuItem key={responsabilidad.id} value={String(responsabilidad.id)}>
+                                {responsabilidad.nombre}
+                            </MenuItem>
+                        ))}
+                    </RHFSelect>
+
                     <Stack direction={'row'} spacing={4} >
                         <Button variant="contained" color="primary" type="submit">
                             Guardar

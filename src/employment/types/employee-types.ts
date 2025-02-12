@@ -31,22 +31,28 @@ interface Funcion {
 }
 
 interface Tipo {
+  id: number;
   nombre: string;
 }
 
 interface AreaAdministrativa {
+  id: number;
   nombre: string;
 }
 
 interface Categoria {
+  id: number;
   nombre: string;
 }
 
 interface UbicacionTrabajo {
+  id: number;
   nombre: string;
+  geolocalizacion: string | null;
 }
 
 interface Responsabilidad {
+  id: number;
   categoria?: string;
   cantidadPersonas?: string;
 }
@@ -76,30 +82,62 @@ export interface updateEmployeeSchema {
 
   Identificadores: {
     Id: number;
-    Legajo: null;
+    Legajo: number | null;
     IdentificadorUnico: null;
     IdentificadorUnicoLaboral: null;
   },
   Repetibles: {
-    Nombre: null;
-    Apellido: null;
-    Genero: null;
-    CondicionImpositiva: null;
-    HorasDiarias: null;
-    FechaNacimiento: null;
-    FechaIngreso: null;
-    TipoEmpleadoId: null;
-    AreaAdministrativaId: null;
-    CategoriaId: null;
-    UbicacionTrabajoId: null;
-    ResponsabilidadId: null;
+    Nombre: string | null;
+    Apellido: string | null;
+    Genero: string | null;
+    CondicionImpositiva: string | null;
+    HorasDiarias: number | null;
+    FechaNacimiento: string | null;
+    FechaIngreso: string | null;
+    TipoEmpleadoId: number | null;
+    AreaAdministrativaId: number | null;
+    CategoriaId: number | null;
+    UbicacionTrabajoId: number | null;
+    ResponsabilidadId: number | null;
   },
   Unicos: {
     Celular: string | null;
     Email: string | null;
-    NumeroJubilacion: null;
+    NumeroJubilacion: number | null;
   }
 
 };
 
+
+//Areas
+
+export type areaType = {
+  id: string;
+  nombre: string;
+}
+
+export type areaTypeResponsabilidad = {
+  id: string;
+  categoria: string;
+  cantidadPersonas: number | string;
+}
+
+
+export interface FormValues {
+  nombre: string | null;
+  apellido: string | null;
+  genero: string | null;
+  fechaNacimiento: string | null;
+  celular: string | null;
+  email: string | null;
+  horasDiarias: number | null;
+  fechaIngreso: string | null;
+  condicionImpositiva: string | null;
+  funcion: number | null;
+  tipo: number | null;
+  categoria: number | null;
+  areaAdministrativa: number | null;
+  ubicacionTrabajo: number | null;
+  responsabilidad: number | null
+}
 

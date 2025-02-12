@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import PaginatedTable from "../../shared/components/table/table-paginated";
 import CustomBreadcrumbs from "../../shared/components/breadcrumbs/bread-crums";
-import { Container, TableBody } from "@mui/material";
+import { Container, TableBody, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { paths } from "../../configs/constants/paths";
 import { useRouter } from "../../hooks/use-router";
@@ -57,11 +57,15 @@ const HistoricList: React.FC = () => {
                         name: 'Lista de empleados',
                         href: paths.main.empleo.list,
                     },
-                    { name: `Empleado ${name}` },
+                    { name: `Recibos Historicos` },
                 ]}
                 sx={{ mb: 2 }}
             />
+            <Typography variant="h6" sx={{ mb: 2 }}>
+                {`Empleado/a ( ${name} )`}
+            </Typography>
             <PaginatedTable columns={columns} data={formattedData ?? []}>
+
                 <TableBody>
                     {formattedData?.map((historicList: HistoricListData) => (
                         <HistoricTableRow
