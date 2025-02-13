@@ -93,6 +93,7 @@ export interface updateEmployeeSchema {
     CondicionImpositiva: string | null;
     HorasDiarias: number | null;
     FechaNacimiento: string | null;
+    FuncionId: number | null;
     FechaIngreso: string | null;
     TipoEmpleadoId: number | null;
     AreaAdministrativaId: number | null;

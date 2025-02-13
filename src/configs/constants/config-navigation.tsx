@@ -21,7 +21,6 @@ export function useNavData() {
 
   if (rol) {
     decryptedRole = decryptData(rol);
-    console.log(decryptedRole)
   }
 
   const data = useMemo(() => {
