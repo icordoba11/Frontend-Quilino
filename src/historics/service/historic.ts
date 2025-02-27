@@ -5,7 +5,7 @@ const historicService = {
 
     async findById(id: number): Promise<any> {
         try {
-            const { data } = await instance.get('/RecibosHistoricos/listarRecibosHistoricos', {
+            const { data } = await instance.get('/RecibosDeSueldo/listarRecibosHistoricos', {
                 params: { id }
             });
             return data;
@@ -16,7 +16,7 @@ const historicService = {
 
     async showPdf(id: number, fechaLiquidacion: string): Promise<any> {
         try {
-            const { data } = await instance.get('/RecibosHistoricos/verReciboHistorico', {
+            const { data } = await instance.get('/RecibosDeSueldo/verReciboHistorico', {
                 params: { id, fechaLiquidacion },
                 responseType: 'blob',
             });

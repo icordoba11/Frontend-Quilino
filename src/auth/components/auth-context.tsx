@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const bytes = CryptoJS.AES.decrypt(data, 'secret-key');
             return bytes.toString(CryptoJS.enc.Utf8);
         } catch (error) {
-            console.error('Error decrypting data:', error);
+
             return '';
         }
     };

@@ -84,6 +84,7 @@ export default function EditDrawer({ open, onClose, empleado }: EditDrawerProps)
         }
         if (data != undefined) {
             setEmployees(data);
+           
 
         }
         if (open) {

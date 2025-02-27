@@ -70,7 +70,6 @@ const FilterDrawer: React.FC = () => {
     useEffect(() => {
         if (data) {
             setEmployees(data);
-            console.log(data)
         }
     }, [data]);
 

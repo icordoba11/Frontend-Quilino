@@ -161,7 +161,7 @@ const TableEmployees: React.FC<TablaConDrawerProps> = () => {
                                                 </TableCell>
                                                 <TableCell>
                                                     <IconButton onClick={() => {
-                                                        navigate(`/historics/${empleado.id}/${empleado.nombre}/list`)
+                                                        navigate(`/historics/${empleado.id}/${empleado.nombre}/${empleado.legajo}/list`)
                                                     }}>
                                                         <InsertDriveFileIcon />
                                                     </IconButton>

@@ -6,12 +6,12 @@ import { Empleado, SendEmployeesDateConvert, updateEmployeeSchema } from '../typ
 const employeeService = {
 
     getAllEmpleados: async (): Promise<Empleado[]> => {
-        const { data }: AxiosResponse<Empleado[]> = await instance.get('/BuscadorEmpleados/buscarEmpleados');
+        const { data }: AxiosResponse<Empleado[]> = await instance.get('/Empleados/buscarEmpleados');
         return data;
     },
 
     getEmpleadosByName: async (params: { busquedaEmpleado: string; area: string }) => {
-        const { data }: AxiosResponse<Empleado[]> = await instance.get('/BuscadorEmpleados/buscarEmpleado', { params });
+        const { data }: AxiosResponse<Empleado[]> = await instance.get('/Empleados/buscarEmpleado', { params });
         return data;
     },
 
@@ -22,7 +22,7 @@ const employeeService = {
                 throw new Error("Ambos legajos (legajoMin y legajoMax) son requeridos");
             }
 
-            const { data }: AxiosResponse<Empleado[]> = await instance.get('/BuscadorEmpleados/buscarRangoLegajos', { params });
+            const { data }: AxiosResponse<Empleado[]> = await instance.get('/Empleados/buscarRangoLegajos', { params });
             return data;
 
         } catch (error) {
@@ -31,13 +31,13 @@ const employeeService = {
     },
 
     getEmpleadosByFechaLiquidacion: async (params: { fechaLiquidacion: string; area: string }) => {
-        const { data }: AxiosResponse<Empleado[]> = await instance.get('/BuscadorEmpleados/buscarFechaLiquidacion', { params });
+        const { data }: AxiosResponse<Empleado[]> = await instance.get('/Empleados/buscarFechaLiquidacion', { params });
         return data;
     },
 
     programarEnvioRecibosSueldo: async (params: SendEmployeesDateConvert) => {
         try {
-            const { data }: any = await instance.post('/EnvioEmpleados/enviarRecibosSueldo',
+            const { data }: any = await instance.post('/RecibosDeSueldo/enviarRecibosSueldo',
 
                 {
                     fechaEjecucion: params.fechaEjecucion,
@@ -58,8 +58,7 @@ const employeeService = {
 
     updateEmployee: async (form: updateEmployeeSchema) => {
         try {
-            const response: AxiosResponse = await instance.put('/ActualizarEmpleados/actualizarDatosEmpleado', form);
-            console.log("response ", response.data)
+            const response: AxiosResponse = await instance.put('/Empleados/actualizarDatosPrimariosEmpleado', form);
             return response.data;
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || "Error desconocido desde el servidor";
@@ -71,7 +70,6 @@ const employeeService = {
     getAllAreas: async (): Promise<[]> => {
         try {
             const { data }: AxiosResponse = await instance.get('/Areas/buscarAreas');
-            console.log(data)
             return data;
         } catch (error) {
             throw error;

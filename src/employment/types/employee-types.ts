@@ -35,7 +35,7 @@ interface Tipo {
   nombre: string;
 }
 
-interface AreaAdministrativa {
+export interface AreaAdministrativa {
   id: number;
   nombre: string;
 }

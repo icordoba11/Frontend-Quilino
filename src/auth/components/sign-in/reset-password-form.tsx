@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import RHFTextField from '../../../shared/components/form/rhf-text-field';
 import loginService from '../../services/login';
 import FormProvider from '../../../shared/components/form/form-provider';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ResetPasswordProps {
     open: boolean;
@@ -61,6 +62,12 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ open, onClose }) => {
             <DialogTitle>Recuperar Contraseña</DialogTitle>
             <FormProvider methods={methods} onSubmit={handleSubmit(handleResetPassword)}>
                 <DialogContent>
+                    <IconButton
+                        sx={{ position: 'absolute', top: 8, right: 8 }}
+                        onClick={onClose}
+                    >
+                        <CloseIcon />
+                    </IconButton>
                     <RHFTextField
                         error={Boolean(errors.resetEmail)}
                         helperText={errors.resetEmail?.message}

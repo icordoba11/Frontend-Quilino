@@ -126,6 +126,7 @@ const SendTable: React.FC<TableProps> = ({ columns, selectedEmployeeIds }) => {
               value="scheduleSend"
               control={<Radio color="primary" />}
               label="Programar envío"
+              disabled
             />
           </RadioGroup>
         </Stack>

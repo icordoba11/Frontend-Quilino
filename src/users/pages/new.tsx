@@ -17,7 +17,7 @@ export default function UserCreatePage() {
     const createMutation = useMutation({
         mutationFn: ({ nombreUsuario, email, password }: { nombreUsuario: string, email: string, password: string }) => userService.createUser(nombreUsuario, email, password),
         onSuccess: () => {
-            enqueueSnackbar('User updated successfully!', { variant: 'success' });
+            enqueueSnackbar('Usuario creado exitosamente!', { variant: 'success' });
             router.push(paths.main.users.list);
         },
         onError: (error: Error) => {

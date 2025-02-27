@@ -11,6 +11,7 @@ import { LoginData } from '../../types/types';
 import Link from '@mui/material/Link';
 import ResetPassword from './reset-password-form';
 import loginService from '../../services/login';
+import { Button } from '@mui/material';
 
 
 const SignInForm: React.FC = () => {
@@ -98,8 +99,9 @@ const SignInForm: React.FC = () => {
         </Link>
 
 
-        <LoadingButton
-          isLoading={loading}
+        <Button
+          loading={loading}
+          variant='contained'
           onClick={onSubmit}
           sx={{
             padding: '0.8rem',
@@ -108,7 +110,7 @@ const SignInForm: React.FC = () => {
           }}
         >
           Iniciar Sesión
-        </LoadingButton>
+        </Button>
 
         <ResetPassword open={openDialog} onClose={() => setOpenDialog(false)} />
       </Box>
