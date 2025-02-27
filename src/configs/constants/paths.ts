@@ -18,7 +18,7 @@ export const paths = {
             edit: '/empleo/edit',
         },
         historic: {
-            list: (id: string) => `/historics/${id}/${name}/list`,
+            list: (id: string, name:string, legajo:string) => `/historics/${id}/${name}/${legajo}/list`,
 
         },
         uploadFiles: {
@@ -32,7 +32,13 @@ export const paths = {
             list: '/users/list',
             new: '/users/new',
             edit: (id: string) => `/users/${id}/edit`,
-        }
+        },
+        settings: {
+            generalList: '/settings/general-list',
+            list: (nombre: string) => `/settings/${nombre}/list`,
+            new: '/settings/new',
+            edit: (id: number, nombre: string) => `/settings/${id}/edit/${nombre}`,
+        },
 
     },
 

@@ -9,7 +9,7 @@ const uploadService = {
         const formData = new FormData();
         formData.append('archivo', file);
 
-        const { data }: AxiosResponse = await instance.post('/importarArchivos/importarPdf', formData, {
+        const { data }: AxiosResponse = await instance.post('/Archivos/importarPdf', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }

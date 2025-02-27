@@ -3,7 +3,6 @@ import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
 import { User } from '../types/types';
 import Iconify from '../../shared/components/iconify/iconify';
 import CustomPopover from '../../shared/components/popover/custom-popover';
@@ -16,8 +15,8 @@ type UserTableRowProps = {
 
 };
 
-export default function UserTableRow({ row, onEdit  }: UserTableRowProps) {
-    const { nombreUsuario, email, rol, fechaRegistro } = row;
+export default function UserTableRow({ onEdit  }: UserTableRowProps) {
+;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
  
 
@@ -37,14 +36,6 @@ export default function UserTableRow({ row, onEdit  }: UserTableRowProps) {
         <>
             <TableRow hover>
 
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{nombreUsuario}</TableCell>
-
-
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{email}</TableCell>
-
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{rol}</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fechaRegistro}</TableCell>
-
                 <TableCell align='right' sx={{ px: 1, whiteSpace: 'nowrap' }}>
                     <IconButton color={open ? 'inherit' : 'default'} onClick={handlePopoverOpen}>
                         <Iconify icon='eva:more-vertical-fill' />
@@ -62,7 +53,7 @@ export default function UserTableRow({ row, onEdit  }: UserTableRowProps) {
                     <Iconify icon='solar:pen-bold' />
                     Edit
                 </MenuItem>
-                <MenuItem
+                {/* <MenuItem
                     onClick={() => {
 
                         handlePopoverClose();
@@ -71,7 +62,7 @@ export default function UserTableRow({ row, onEdit  }: UserTableRowProps) {
                 >
                     <Iconify icon='solar:trash-bin-trash-bold' />
                     Delete
-                </MenuItem>
+                </MenuItem> */}
             </CustomPopover>
         </>
     );

@@ -28,6 +28,12 @@ const HistoricList = lazy(() => import('../historics/pages/list'));
 //Error Pages
 const WithoutPermission = lazy(() => import('../error-pages/pages/without-permission'));
 const ErrorPage = lazy(() => import('../error-pages/pages/not-found-404'))
+//Settings
+const GeneralSettingsList = lazy(() => import('../dto-settings/pages/general-list'));
+const SpecificSettingsList = lazy(() => import('../dto-settings/pages/specific-list'));
+
+
+
 export default function MyRouter() {
     return useRoutes([
         {
@@ -103,7 +109,7 @@ export default function MyRouter() {
                         </RoleGuard>
                     ),
                     children: [
-                        { path: ':id/:name/list', element: <HistoricList /> },
+                        { path: ':id/:name/:legajo/list', element: <HistoricList /> },
                     ],
                 },
                 {
@@ -144,6 +150,22 @@ export default function MyRouter() {
                         { path: 'new', element: <UserCreate /> },
                         { path: 'list', element: <UserList /> },
                         { path: ':id/edit', element: <UserEdit /> },
+                    ],
+                },
+                {
+                    path: '/settings',
+                    element: (
+                        <RoleGuard allowedRoles={['Usuario', 'Administrador']}>
+                            <Outlet />
+                        </RoleGuard>
+                    ),
+                    children: [
+                        { element: <GeneralSettingsList />, index: true },
+                        { path: 'general-list', element: <GeneralSettingsList /> },
+                        { path: ':nombre/list', element: <SpecificSettingsList /> },
+                        // { path: ':id/edit/:nombre', element: <EditSettingsList /> },
+                        { path: 'new', element: <h1>Crear nueva area</h1> },
+
                     ],
                 },
                 // { path: 'coming-soon', element: <h1>Coming Soon</h1> },

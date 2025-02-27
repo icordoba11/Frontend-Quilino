@@ -41,9 +41,14 @@ export function useNavData() {
         path: paths.main.uploadFiles.list,
         icon: <Iconify icon='material-symbols:drive-folder-upload-outline' />,
       },
+      {
+        title: 'Configuracion',
+        path: paths.main.settings.generalList,
+        icon: <Iconify icon='material-symbols:settings-b-roll-outline-rounded' />,
+      },
     ];
 
-  
+
     if (decryptedRole === 'Administrador') {
       navItems.push({
         title: 'Usuarios',
