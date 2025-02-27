@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 import SplashScreen from '../shared/components/chargers/splash-screen';
-import LoadingScreen from '../shared/components/chargers/loading-screen';
 import AuthGuard from './guards/auth-guard';
 import GuestGuard from './guards/guest-guard';
 import AuthLayout from '../shared/components/layouts/auth-basic-layout';

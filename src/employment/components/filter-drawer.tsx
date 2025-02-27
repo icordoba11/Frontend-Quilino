@@ -28,7 +28,7 @@ const FilterDrawer: React.FC = () => {
     const [legajoMax, setLegajoMax] = useState("");
     const [area, setArea] = useState('null');
     const [activeField, setActiveField] = useState<string | null>(null);
-    const { employees, setEmployees, setIsLoading, setIsError } = useEmployeesContext();
+    const { setEmployees } = useEmployeesContext();
 
 
 
@@ -61,7 +61,7 @@ const FilterDrawer: React.FC = () => {
     };
 
 
-    const { data, isLoading, error } = useQuery({
+    const { data } = useQuery({
         queryKey: ['getAllEmployees', legajoMin, legajoMax, fechaLiquidacion, busquedaEmpleado, area],
         queryFn: fetchEmpleados,
 

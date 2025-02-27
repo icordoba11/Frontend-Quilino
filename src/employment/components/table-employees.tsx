@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Box, Typography, Checkbox, CssBaseline, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, MenuItem } from "@mui/material";
+import React, { useCallback, useState } from "react";
+import { Box, Typography, Checkbox, CssBaseline, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { columnsFirstTable, columnsSelectedEmployees } from '../utils/table-columns';
 import FilterDrawer from "./filter-drawer";
 import EditDrawer from "./edit-drawer";
 import { Fade } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Empleado } from "../types/employee-types";
-import { useSnackbar } from "notistack";
 import { useEmployeesContext } from "./provider/employee-context";
 import SendTable from "./send-table";
 import ConfirmSelected from "./confirm-selected";
@@ -27,12 +25,12 @@ const LoadingScreen = () => (
 
 const TableEmployees: React.FC<TablaConDrawerProps> = () => {
     const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
-    const { employees, setEmployees, isLoading, selected, setSelected, openDialog, setOpenDialog } = useEmployeesContext();
+    // const { enqueueSnackbar } = useSnackbar();
+    const { employees, isLoading, selected, setSelected, openDialog, setOpenDialog } = useEmployeesContext();
 
     const [open, setOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const openPopover = Boolean(anchorEl);
+    // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
     const [selectedEmployee, setSelectedEmployee] = useState<Empleado | null>(null);
 
 
@@ -40,23 +38,23 @@ const TableEmployees: React.FC<TablaConDrawerProps> = () => {
     const [order, setOrder] = useState<'asc' | 'desc'>('asc');
     const [orderBy, setOrderBy] = useState<string>('nombre');
 
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, empleado: Empleado) => {
-        setSelectedEmployee(empleado);
-        setAnchorEl(event.currentTarget);
-    };
+    // const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, empleado: Empleado) => {
+    //     setSelectedEmployee(empleado);
+    //     setAnchorEl(event.currentTarget);
+    // };
 
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-        setSelectedEmployee(null);
-    };
+    // const handlePopoverClose = () => {
+    //     setAnchorEl(null);
+    //     setSelectedEmployee(null);
+    // };
 
-    const handleEdit = () => {
-        if (selectedEmployee) {
-            setOpen(true);
-        } else {
-            enqueueSnackbar('Ocurrio un error', { variant: 'error' });
-        }
-    };
+    // const handleEdit = () => {
+    //     if (selectedEmployee) {
+    //         setOpen(true);
+    //     } else {
+    //         enqueueSnackbar('Ocurrio un error', { variant: 'error' });
+    //     }
+    // };
 
 
 

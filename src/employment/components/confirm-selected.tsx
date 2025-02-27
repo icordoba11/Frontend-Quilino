@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,7 +17,7 @@ export default function ConfirmSelected({ title, content, action, open, onClose,
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     return (
 
-        <Dialog fullWidth sx={{backgroundColor: 'red'}}  open={open} onClose={onClose} {...other}
+        <Dialog fullScreen={fullScreen} fullWidth sx={{backgroundColor: 'red'}}  open={open} onClose={onClose} {...other}
         PaperProps={{
             sx: {
                 borderRadius: 3,     

@@ -34,11 +34,13 @@ const HistoricList: React.FC = () => {
         },
         [router]
     );
+    
 
     // Función para abrir el PDF
     const handleIconClick = async (row: HistoricListData) => {
         try {
             setClickedRow(row);
+            console.log(clickedRow)
             await historicService.showPdf(Number(id), row.FechaLiquidacion);
         } catch (error) {
             console.error("Error al abrir el archivo PDF", error);

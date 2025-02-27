@@ -35,9 +35,8 @@ const SpecificSettingsList: React.FC = () => {
         queryKey: ['getSpecificSetting', nombre],
         queryFn: () => employeeService.getAllAreas(),
     });
-    console.log(data)
 
-    const formattedData: SettingsItem[] = data?.[nombre]?.map((item: SettingsItem) => ({
+    const formattedData: SettingsItem[] = data && nombre ? data[nombre]?.map((item: SettingsItem) => ({
         id: item.id,
         nombre: item.nombre,
         actions: (
@@ -47,7 +46,8 @@ const SpecificSettingsList: React.FC = () => {
                 </IconButton>
             </Box>
         ),
-    })) || [];
+    })) : [];
+    
 
 
     useEffect(() => {

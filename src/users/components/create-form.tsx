@@ -26,7 +26,7 @@ export default function UserCreateForm({ onSubmit, isLoading }: UserNewEditFormP
         mode: "onChange",
     });
 
-    const { handleSubmit, formState: { isValid }, watch } = methods;
+    const { handleSubmit, watch } = methods;
 
     const password = watch('password');
 

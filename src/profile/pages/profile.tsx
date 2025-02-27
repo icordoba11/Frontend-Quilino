@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Tabs, Tab, CssBaseline, Box, Typography, CardMedia, Divider } from "@mui/material";
 import ProfileForm from "../components/profile-form";
 import ChangePasswordForm from "../components/change-password";
@@ -35,7 +35,7 @@ const Profile = () => {
                         orientation="vertical"
                         variant="scrollable"
                         value={value}
-                        onChange={(event, newValue) => setValue(newValue)}
+                        onChange={(_, newValue) => setValue(newValue)}
                         sx={{ borderLeft: 1, borderColor: 'divider', minWidth: 200 }}
 
                     >

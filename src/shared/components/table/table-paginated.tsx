@@ -1,4 +1,4 @@
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 import { Table, TableContainer, TableHead, TableCell, TableRow as MuiTableRow, TablePagination, Paper, TableBody } from "@mui/material";
 
 interface Column {
