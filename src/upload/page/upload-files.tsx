@@ -36,7 +36,7 @@ const FileUpload: React.FC = () => {
             setLoadingButton(false);
             setFile(null);
         },
-        onError: (error: Error) => {
+        onError: () => {
             enqueueSnackbar('Error en la importación', { variant: 'error' });
             setLoadingButton(false);
         },

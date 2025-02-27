@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
+import { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import CryptoJS from 'crypto-js';
 import { UserResponse } from '../types/types';
 

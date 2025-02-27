@@ -1,4 +1,4 @@
-import { Fade, Link, Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import { motion } from "framer-motion";
 import Logo from '../../assets/images/logo-municipalidad.webp';
 import { useNavigate } from 'react-router-dom';

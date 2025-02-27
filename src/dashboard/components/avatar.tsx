@@ -8,7 +8,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
-import PeopleIcon from '@mui/icons-material/People';
 import { red } from '@mui/material/colors';
 import { paths } from '../../configs/constants/paths';
 import { useAuth } from '../../auth/components/auth-context';

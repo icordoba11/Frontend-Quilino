@@ -1,9 +1,5 @@
 
 import Stack from '@mui/material/Stack';
-
-
-import { useResponsive } from '../../../hooks/use-responsive';
-
 import Logo from '../../../assets/logo/logo';
 import { PropsWithChildren } from 'react';
 

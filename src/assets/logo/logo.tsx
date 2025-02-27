@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { SxProps, useTheme, Theme } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/material/styles';
 
 import RouterLink from '../logo/utils/router-link';
 

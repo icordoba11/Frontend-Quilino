@@ -21,9 +21,10 @@ interface TabLayoutProps {
 const TabLayout: React.FC<TabLayoutProps> = ({ tabs }) => {
   const [value, setValue] = React.useState(tabs[0]?.value || '');
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  
 
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', boxShadow: '-4px 0px 10px rgba(0, 0, 0, 0.3)', backgroundColor: '#F5F5F5' }}>
