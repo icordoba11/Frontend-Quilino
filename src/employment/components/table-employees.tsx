@@ -112,7 +112,7 @@ const TableEmployees: React.FC<TablaConDrawerProps> = () => {
                     {isLoading ? (
                         <LoadingScreen />
                     ) : (
-                        <Box sx={{ maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', borderRadius: '5px', }}>
+                        <Box sx={{ maxHeight: 'calc(100vh - 250px)', overflowY: 'auto', borderRadius: '5px', }}>
                             <TableContainer component={Paper} sx={{ p: 2 }}>
                                 <Table sx={{ width: '100%', }} aria-label="tabla de empleados">
                                     <TableHead sx={{ backgroundColor: '#e7e7e7', boxShadow: 30 }}>

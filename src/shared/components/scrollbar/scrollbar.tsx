@@ -33,7 +33,7 @@ const GlobalScrollbar: React.FC<GlobalScrollbarProps> = ({ children }) => {
       </style>
       <Box
         sx={{
-          height: '100vh',
+          height: '110vh',
           overflow: 'auto',
           backgroundColor: theme.palette.background.paper,
           width: '100%'
