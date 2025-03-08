@@ -102,7 +102,7 @@ const FilterDrawer: React.FC = () => {
         <Box sx={{
             width: 240,
             flexShrink: 0,
-            height: '120vh',
+            height: '100vh',
             position: 'relative',
             mt: -3,
             boxShadow: 10
